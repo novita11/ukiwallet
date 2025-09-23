@@ -3,558 +3,359 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>UKI-Wallet (Mobile Prototype)</title>
+<title>UKI-Wallet Web (Prototype)</title>
 <style>
   :root{
-    --gold:#C9A227;
-    --gold-2:#E6C766;
-    --gold-3:#8C6E00;
-    --bg:#0F1115;
-    --card:#171A21;
-    --text:#F6F6F6;
-    --muted:#A7A7A7;
-    --ok:#2ecc71;
-    --warn:#f39c12;
-    --err:#e74c3c;
+    --gold:#C9A227; --gold-2:#E6C766; --gold-3:#8C6E00;
+    --bg:#0C0E12; --panel:#11151C; --card:#151A23; --muted:#a8afbc; --text:#F2F4F8;
+    --ok:#2ecc71; --warn:#f39c12; --err:#e74c3c;
   }
   *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,Arial; background:linear-gradient(180deg,#0B0D10,#12151B 50%, #0B0D10); color:var(--text);
+  body{margin:0; font-family:Inter,system-ui,Arial; background:linear-gradient(180deg,#0A0C10,#0E1118 50%,#0A0C10); color:var(--text)}
+  .layout{display:grid; grid-template-columns:240px 1fr; min-height:100vh}
+  aside{
+    background:#0d1117; border-right:1px solid #1f2633; padding:16px; display:flex; flex-direction:column; gap:12px;
   }
-  .app{
-    max-width:430px; margin:0 auto; min-height:100svh; display:flex; flex-direction:column;
+  .logoRow{display:flex; align-items:center; gap:10px}
+  .logo{width:36px; height:36px; border-radius:12px; background: radial-gradient(120% 120% at 20% 20%, var(--gold-2), var(--gold)); border:1px solid rgba(255,255,255,0.18)}
+  .brand{font-weight:700}
+  .menu{display:flex; flex-direction:column; gap:8px; margin-top:12px}
+  .menu button{
+    text-align:left; width:100%; padding:10px 12px; border-radius:10px; border:1px solid #223044; background:#0e131a; color:#cfd6e2; cursor:pointer
   }
+  .menu button.active{border-color:#3a4a66; color:var(--gold-2); background:#121826}
+  .tier{margin-top:auto; padding:10px; border:1px dashed #2b3850; border-radius:10px; color:#d9d9d9; font-size:12px}
+
   header{
-    padding:14px 16px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:5;
-    background:rgba(15,17,21,0.85); backdrop-filter:blur(8px); border-bottom:1px solid #1f2430;
+    height:60px; display:flex; align-items:center; gap:12px; padding:0 16px;
+    border-bottom:1px solid #1f2633; background:rgba(10,12,16,0.6); backdrop-filter:blur(8px); position:sticky; top:0; z-index:5;
   }
-  .brand{
-    display:flex; align-items:center; gap:10px;
-  }
-  .logo{
-    width:34px; height:34px; border-radius:10px;
-    background: radial-gradient(120% 120% at 20% 20%, var(--gold-2), var(--gold));
-    border:1px solid rgba(255,255,255,0.2); box-shadow:0 0 0 2px rgba(255,215,0,0.1), inset 0 0 16px rgba(0,0,0,0.4);
-  }
-  .brand h1{font-size:16px; margin:0; letter-spacing:0.4px}
-  .pill{
-    margin-left:auto; font-size:12px; padding:6px 10px; border-radius:999px; color:#101216;
+  .sp{margin-left:auto; display:flex; align-items:center; gap:10px}
+  .pill{padding:6px 10px; border-radius:999px; color:#121316; font-size:12px; font-weight:700;
     background:linear-gradient(180deg,var(--gold-2),var(--gold)); border:1px solid rgba(0,0,0,0.25);
   }
-  main{flex:1; padding:16px; display:flex; flex-direction:column; gap:14px}
+
+  main{padding:16px; display:grid; grid-template-columns:1.2fr 1fr; gap:16px}
   .card{
-    background:linear-gradient(180deg,#151922,#0F1219);
-    border:1px solid #262b37; border-radius:16px; padding:16px; box-shadow:0 4px 24px rgba(0,0,0,0.35);
+    background:linear-gradient(180deg,#151a23,#0f141b); border:1px solid #263044; border-radius:14px; padding:16px; box-shadow:0 4px 24px rgba(0,0,0,0.35);
   }
-  .balance{display:flex; align-items:flex-end; justify-content:space-between}
-  .balance .amt{
-    font-size:28px; font-weight:700;
-    background:linear-gradient(180deg,var(--gold-2),var(--gold));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 2px 18px rgba(233, 196, 106, 0.2);
+  h2{margin:0 0 10px}
+  .balance{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:8px
   }
-  .balance .sub{color:var(--muted); font-size:12px}
-  .actions{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
-  .action{
-    display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; user-select:none;
+  .amt{
+    font-size:34px; font-weight:800; background:linear-gradient(180deg,var(--gold-2),var(--gold)); -webkit-background-clip:text; color:transparent; text-shadow:0 2px 18px rgba(233,196,106,0.2)
   }
-  .action .ico{
-    width:54px; height:54px; border-radius:14px; display:grid; place-items:center; font-size:20px;
-    background:radial-gradient(120% 120% at 20% 20%, #212636, #10131a); border:1px solid #2b3242;
-  }
-  .action span{font-size:12px; color:#d8d8d8}
-  .section-title{margin:8px 0 4px; font-size:14px; color:#d7d7d7}
-  .list{display:flex; flex-direction:column; gap:10px}
-  .list .row{
-    display:flex; align-items:center; justify-content:space-between; padding:12px; border-radius:12px; background:#131720; border:1px solid #232938;
-  }
-  .row .left{display:flex; align-items:center; gap:12px}
-  .ico-sm{
-    width:36px; height:36px; border-radius:10px; display:grid; place-items:center; font-size:16px;
-    background:radial-gradient(120% 120% at 20% 20%, #202534, #0f1218); border:1px solid #2b3242;
-  }
-  .row .title{font-size:14px}
-  .row .sub{font-size:12px; color:var(--muted)}
-  .chip{
-    padding:6px 10px; border-radius:999px; font-size:12px; border:1px solid #2b3242; color:#eaeaea;
-    background:linear-gradient(180deg,#1b2030,#121722);
-  }
-
-  /* bottom nav */
-  nav{
-    position:sticky; bottom:0; background:rgba(13,15,20,0.85); backdrop-filter:blur(8px);
-    border-top:1px solid #202535; display:grid; grid-template-columns:repeat(4,1fr);
-  }
-  nav button{
-    background:none; color:#cfcfcf; border:0; padding:10px 4px; display:flex; flex-direction:column; gap:4px; align-items:center; cursor:pointer
-  }
-  nav button.active{color:var(--gold-2)}
-  nav .ni{font-size:18px}
-  nav .nt{font-size:11px}
-
-  /* pages */
-  .page{display:none}
-  .page.active{display:block}
-
-  /* forms & buttons */
-  input, select{
-    width:100%; padding:12px 12px; border-radius:12px; background:#0f1218; border:1px solid #2b3242; color:#e0e0e0;
-    outline:none;
-  }
-  label{font-size:12px; color:#b9c0ce}
+  .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
   .btn{
-    width:100%; padding:12px 14px; border-radius:12px; border:1px solid #2b3242; color:#101216; font-weight:600; cursor:pointer;
-    background:linear-gradient(180deg,var(--gold-2),var(--gold));
+    padding:12px 10px; border-radius:10px; border:1px solid #2b3850; background:#0e131a; color:#e6e6e6; cursor:pointer;
   }
-  .btn.ghost{background:transparent; color:#e9e9e9}
+  .btn.primary{background:linear-gradient(180deg,var(--gold-2),var(--gold)); color:#151515; font-weight:700; border-color:#7a5b00}
+  .row{display:flex; align-items:center; justify-content:space-between; padding:10px; border:1px solid #263044; border-radius:10px; margin:8px 0; background:#121826}
+  .tag{font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid #2b3850}
+  .ok{color:#90ffb5; background:#0b1b12} .err{color:#ffc0c0; background:#2a0f12} .pend{color:#ffe39b; background:#281c06}
+  .list{max-height:380px; overflow:auto}
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-
-  /* modal & toast */
-  .modal-backdrop{
-    position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,0.5); z-index:20;
-  }
-  .modal{width:min(92vw,420px); background:#0e1218; border:1px solid #2b3242; border-radius:16px; padding:16px}
-  .modal h3{margin:4px 0 10px}
-  .modal .close{float:right; cursor:pointer; color:#999}
-  .toast{
-    position:fixed; left:50%; transform:translateX(-50%); bottom:84px; z-index:30; display:none;
-    background:#0b0f15; color:#eaeaea; border:1px solid #2b3242; padding:10px 14px; border-radius:12px;
-  }
-  .tag{font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid #2b3242; color:#dcdcdc}
-  .tag.ok{border-color:#234; color:#9effc0; background:#0b1b12}
-  .tag.err{color:#ffb8b8; background:#2a0f12}
-  .tag.pend{color:#ffe7a1; background:#281c06}
+  input, select{width:100%; padding:10px 12px; border-radius:10px; background:#0f1218; border:1px solid #2b3242; color:#e0e0e0; outline:none}
+  label{font-size:12px; color:#b9c0ce}
+  .toast{position:fixed; right:16px; bottom:16px; background:#0b0f15; border:1px solid #2b3242; color:#eaeaea; padding:10px 14px; border-radius:12px; display:none; z-index:30}
+  .hidden{display:none}
+  @media (max-width: 980px){ .layout{grid-template-columns:1fr} aside{display:none} main{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <div class="brand">
-      <div class="logo"></div>
-      <h1>UKI-Wallet</h1>
+<div class="layout">
+  <aside>
+    <div class="logoRow"><div class="logo"></div><div class="brand">UKI-Wallet</div></div>
+    <div class="menu">
+      <button data-nav="dashboard" class="active">Dashboard</button>
+      <button data-nav="transfer">Transfer</button>
+      <button data-nav="cashout">Cash-out (Agent)</button>
+      <button data-nav="bills">Bills & Taxes</button>
+      <button data-nav="qr">QR Payment</button>
+      <button data-nav="cards">Cards</button>
+      <button data-nav="settings">Settings</button>
     </div>
-    <div class="pill" id="tierPill">Tier: BASIC</div>
-  </header>
+    <div class="tier">Tier: <b id="tierText">BASIC</b><br/>Points: <b id="pointsText">0</b></div>
+  </aside>
 
-  <main>
-    <!-- HOME -->
-    <section class="page active" id="page-home">
-      <div class="card">
+  <div style="display:flex; flex-direction:column; min-width:0">
+    <header>
+      <h3 style="margin:0">Web Console</h3>
+      <div class="sp">
+        <button class="btn" id="btnTopUpQuick">Top-up Rp100.000</button>
+        <div class="pill" id="pillBalance">Rp 0</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="card" id="view-dashboard">
+        <h2>Overview</h2>
         <div class="balance">
           <div>
-            <div class="sub">Available Balance</div>
-            <div class="amt" id="balanceText">Rp 0</div>
+            <div style="color:#c7cdd8; font-size:13px">Available Balance</div>
+            <div class="amt" id="txtBal">Rp 0</div>
           </div>
-          <button class="chip" id="btnAddMoney">+ Top Up</button>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+            <button class="btn primary" data-nav="transfer">Transfer</button>
+            <button class="btn primary" data-nav="bills">Pay Bills</button>
+            <button class="btn primary" data-nav="qr">Scan QR</button>
+          </div>
         </div>
-      </div>
+        <div class="list" id="listActivity"></div>
+      </section>
 
-      <div class="actions">
-        <div class="action" data-nav="transfer">
-          <div class="ico">➡️</div><span>Transfer</span>
-        </div>
-        <div class="action" data-nav="cashout">
-          <div class="ico">🏪</div><span>Cash-out</span>
-        </div>
-        <div class="action" data-nav="pay">
-          <div class="ico">🧾</div><span>Pay Bills</span>
-        </div>
-        <div class="action" data-nav="qr">
-          <div class="ico">🔳</div><span>Scan QR</span>
-        </div>
-      </div>
-
-      <div class="section-title">Shortcuts</div>
-      <div class="actions">
-        <div class="action" data-nav="topup">
-          <div class="ico">🏦</div><span>Top-up</span>
-        </div>
-        <div class="action" data-nav="cards">
-          <div class="ico">💳</div><span>Cards</span>
-        </div>
-        <div class="action" data-nav="rewards">
-          <div class="ico">🎁</div><span>Rewards</span>
-        </div>
-        <div class="action" data-nav="profile">
-          <div class="ico">⚙️</div><span>Profile</span>
-        </div>
-      </div>
-
-      <div class="section-title">Recent Activity</div>
-      <div class="list" id="activityList"></div>
-    </section>
-
-    <!-- TRANSFER -->
-    <section class="page" id="page-transfer">
-      <div class="card" style="display:grid; gap:10px">
-        <label>Recipient (Phone/ID)
-          <input id="tfRecipient" placeholder="+62xxxxxxxxxx"/>
-        </label>
-        <label>Amount
-          <input id="tfAmount" type="number" min="0" step="1000" placeholder="50000"/>
-        </label>
+      <section class="card hidden" id="view-transfer">
+        <h2>Transfer Money</h2>
         <div class="grid2">
-          <button class="btn ghost" data-nav="home">Cancel</button>
-          <button class="btn" id="btnTransfer">Send</button>
+          <label>Recipient
+            <input id="w_recipient" placeholder="+62xxxxxxxxxx"/>
+          </label>
+          <label>Amount
+            <input id="w_amount" type="number" min="0" step="1000" placeholder="50000"/>
+          </label>
         </div>
-      </div>
-      <div class="card">
-        <div class="section-title">Tips</div>
-        <div class="row"><div class="left"><div class="ico-sm">💡</div><div><div class="title">Free transfers</div><div class="sub">Up to 10 domestic transfers/month</div></div></div><div class="tag">Promo</div></div>
-      </div>
-    </section>
+        <div style="margin-top:10px" class="grid2">
+          <button class="btn" data-nav="dashboard">Cancel</button>
+          <button class="btn primary" id="w_send">Send</button>
+        </div>
+      </section>
 
-    <!-- CASHOUT -->
-    <section class="page" id="page-cashout">
-      <div class="card" style="display:grid; gap:10px">
-        <label>Agent
-          <select id="coAgent">
-            <option value="indomaret">Indomaret</option>
-            <option value="alfamart">Alfamart</option>
-            <option value="pos">POS Agent</option>
-          </select>
-        </label>
-        <label>Amount
-          <input id="coAmount" type="number" min="0" step="1000" placeholder="100000"/>
-        </label>
+      <section class="card hidden" id="view-cashout">
+        <h2>Cash-out (Agent, e.g., Indomaret)</h2>
         <div class="grid2">
-          <button class="btn ghost" data-nav="home">Cancel</button>
-          <button class="btn" id="btnCashout">Generate Code</button>
+          <label>Agent
+            <select id="w_agent">
+              <option value="indomaret">Indomaret</option>
+              <option value="alfamart">Alfamart</option>
+              <option value="pos">POS Agent</option>
+            </select>
+          </label>
+          <label>Amount
+            <input id="w_co_amount" type="number" min="0" step="1000" placeholder="100000"/>
+          </label>
         </div>
-      </div>
-      <div class="card">
-        <div class="row"><div class="left"><div class="ico-sm">⏱️</div><div><div class="title">Code TTL</div><div class="sub">Valid for 30 minutes</div></div></div><div class="tag pend">PENDING</div></div>
-      </div>
-    </section>
+        <div style="margin-top:10px" class="grid2">
+          <button class="btn" data-nav="dashboard">Cancel</button>
+          <button class="btn primary" id="w_cashout">Generate Code</button>
+        </div>
+      </section>
 
-    <!-- PAY BILLS -->
-    <section class="page" id="page-pay">
-      <div class="card" style="display:grid; gap:10px">
-        <label>Biller
-          <select id="pbBiller">
-            <option value="pln">Electricity (PLN)</option>
-            <option value="pdam">Water (PDAM)</option>
-            <option value="pajak">Taxes</option>
-            <option value="telco">Telco</option>
-          </select>
-        </label>
-        <label>Customer Reference
-          <input id="pbRef" placeholder="Customer No / Tax ID"/>
-        </label>
-        <label>Amount
-          <input id="pbAmount" type="number" min="0" step="1000" placeholder="150000"/>
-        </label>
+      <section class="card hidden" id="view-bills">
+        <h2>Bills & Taxes</h2>
         <div class="grid2">
-          <button class="btn ghost" data-nav="home">Cancel</button>
-          <button class="btn" id="btnPayBill">Pay</button>
+          <label>Biller
+            <select id="w_biller">
+              <option value="pln">Electricity (PLN)</option>
+              <option value="pdam">Water (PDAM)</option>
+              <option value="pajak">Taxes</option>
+              <option value="telco">Telco</option>
+            </select>
+          </label>
+          <label>Reference
+            <input id="w_ref" placeholder="Customer No / Tax ID"/>
+          </label>
         </div>
-      </div>
-    </section>
+        <div class="grid2" style="margin-top:10px">
+          <label>Amount
+            <input id="w_bill_amount" type="number" min="0" step="1000" placeholder="150000"/>
+          </label>
+          <label>Funding
+            <select id="w_funding">
+              <option value="wallet">Wallet</option>
+              <option value="split">Split (Wallet + Card)</option>
+            </select>
+          </label>
+        </div>
+        <div style="margin-top:10px" class="grid2">
+          <button class="btn" data-nav="dashboard">Cancel</button>
+          <button class="btn primary" id="w_paybill">Pay</button>
+        </div>
+      </section>
 
-    <!-- QR -->
-    <section class="page" id="page-qr">
-      <div class="card" style="display:grid; gap:10px; place-items:center; text-align:center">
-        <div style="font-size:64px">🔳</div>
-        <div class="sub">Simulated QR Scanner</div>
-        <button class="btn" id="btnQrPay">Scan & Pay Rp 25.000</button>
-        <button class="btn ghost" data-nav="home">Back</button>
-      </div>
-    </section>
+      <section class="card hidden" id="view-qr">
+        <h2>QR Payment</h2>
+        <div style="display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:center">
+          <div style="font-size:80px; text-align:center">🔳</div>
+          <div>
+            <div style="color:#c7cdd8; font-size:13px; margin-bottom:6px">Simulated QR</div>
+            <button class="btn primary" id="w_qr_pay">Pay Rp25.000</button>
+            <div style="margin-top:8px; color:#c7cdd8; font-size:12px">Supports tips, vouchers, points (simulated).</div>
+          </div>
+        </div>
+      </section>
 
-    <!-- TOPUP -->
-    <section class="page" id="page-topup">
-      <div class="card" style="display:grid; gap:10px">
-        <label>Method
-          <select id="tuMethod">
-            <option value="va">Bank VA</option>
-            <option value="card">Card (3DS)</option>
-            <option value="wallet">Other Wallet</option>
-            <option value="agent">Agent</option>
-          </select>
-        </label>
-        <label>Amount
-          <input id="tuAmount" type="number" min="0" step="1000" placeholder="200000"/>
-        </label>
+      <section class="card hidden" id="view-cards">
+        <h2>Cards</h2>
+        <div class="row"><div>Visa •••• 4242</div><div><span class="tag">Default</span></div></div>
+        <div class="grid2" style="margin-top:10px">
+          <button class="btn" id="w_add_card">Add Card</button>
+          <button class="btn primary" id="w_card_charge">Charge Rp50.000</button>
+        </div>
+      </section>
+
+      <section class="card hidden" id="view-settings">
+        <h2>Settings</h2>
         <div class="grid2">
-          <button class="btn ghost" data-nav="home">Cancel</button>
-          <button class="btn" id="btnTopup">Top Up</button>
+          <button class="btn" id="w_upgrade">Upgrade to PLUS</button>
+          <button class="btn" id="w_reset">Reset Demo Data</button>
         </div>
-      </div>
-    </section>
-
-    <!-- CARDS -->
-    <section class="page" id="page-cards">
-      <div class="card" style="display:grid; gap:10px">
-        <div class="row"><div class="left"><div class="ico-sm">💳</div><div><div class="title">Visa •••• 4242</div><div class="sub">Default tokenized card</div></div></div><button class="chip" id="btnAddCard">+ Add</button></div>
-        <button class="btn" id="btnChargeCard">Quick Charge Rp 50.000</button>
-      </div>
-    </section>
-
-    <!-- REWARDS -->
-    <section class="page" id="page-rewards">
-      <div class="card" style="display:grid; gap:10px">
-        <div class="row"><div class="left"><div class="ico-sm">🎁</div><div><div class="title">Cashback Voucher</div><div class="sub">5% up to Rp10.000 on QR payments</div></div></div><div class="tag ok">Active</div></div>
-        <div class="row"><div class="left"><div class="ico-sm">⭐</div><div><div class="title">Loyalty Points</div><div class="sub" id="pointsText">0 pts</div></div></div><button class="chip" id="btnRedeem">Redeem</button></div>
-      </div>
-    </section>
-
-    <!-- PROFILE -->
-    <section class="page" id="page-profile">
-      <div class="card" style="display:grid; gap:10px">
-        <div class="row"><div class="left"><div class="ico-sm">👤</div><div><div class="title">John Doe</div><div class="sub">+62 812-0000-0000</div></div></div><div class="tag">BASIC</div></div>
-        <button class="btn" id="btnUpgrade">Upgrade to PLUS</button>
-        <button class="btn ghost" id="btnReset">Reset Demo Data</button>
-      </div>
-    </section>
-  </main>
-
-  <nav>
-    <button data-nav="home" class="active"><div class="ni">🏠</div><div class="nt">Home</div></button>
-    <button data-nav="transfer"><div class="ni">➡️</div><div class="nt">Transfer</div></button>
-    <button data-nav="pay"><div class="ni">🧾</div><div class="nt">Bills</div></button>
-    <button data-nav="profile"><div class="ni">⚙️</div><div class="nt">Profile</div></button>
-  </nav>
-</div>
-
-<!-- Modal -->
-<div class="modal-backdrop" id="modal">
-  <div class="modal">
-    <span class="close" id="modalClose">✖</span>
-    <h3 id="modalTitle">Title</h3>
-    <div id="modalBody">Body</div>
-    <div style="display:flex; gap:10px; margin-top:12px; justify-content:flex-end">
-      <button class="btn ghost" id="modalCancel">Close</button>
-      <button class="btn" id="modalOK">OK</button>
-    </div>
+      </section>
+    </main>
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-  // Simple store
   const S = {
-    balance: +(localStorage.getItem('ukiw_balance') ?? 250000),
-    points: +(localStorage.getItem('ukiw_points') ?? 120),
-    tier: localStorage.getItem('ukiw_tier') ?? 'BASIC',
-    tx: JSON.parse(localStorage.getItem('ukiw_tx') ?? '[]'),
+    balance: +(localStorage.getItem('ukiw_balance_w') ?? 500000),
+    points: +(localStorage.getItem('ukiw_points_w') ?? 320),
+    tier: localStorage.getItem('ukiw_tier_w') ?? 'BASIC',
+    tx: JSON.parse(localStorage.getItem('ukiw_tx_w') ?? '[]'),
     save(){
-      localStorage.setItem('ukiw_balance', S.balance);
-      localStorage.setItem('ukiw_points', S.points);
-      localStorage.setItem('ukiw_tier', S.tier);
-      localStorage.setItem('ukiw_tx', JSON.stringify(S.tx.slice(0,30)));
+      localStorage.setItem('ukiw_balance_w', S.balance);
+      localStorage.setItem('ukiw_points_w', S.points);
+      localStorage.setItem('ukiw_tier_w', S.tier);
+      localStorage.setItem('ukiw_tx_w', JSON.stringify(S.tx.slice(0,40)));
       render();
     }
   };
-
-  // UI helpers
   const fmt = n => 'Rp ' + (n||0).toLocaleString('id-ID');
-  const el = id => document.getElementById(id);
-  const toast = (msg, ms=1800) => {
-    const t=el('toast'); t.textContent=msg; t.style.display='block';
-    setTimeout(()=>t.style.display='none', ms);
-  };
-  const modal = {
-    open(title, body, okText='OK', onOk=null){
-      el('modalTitle').textContent=title;
-      el('modalBody').innerHTML=body;
-      el('modal').style.display='grid';
-      const okBtn = el('modalOK');
-      okBtn.textContent=okText;
-      okBtn.onclick = () => { el('modal').style.display='none'; onOk && onOk(); };
-    },
-    close(){ el('modal').style.display='none'; }
-  };
+  const toast = (m,ms=1800)=>{ const t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; setTimeout(()=>t.style.display='none',ms); };
 
-  // Navigation
   function nav(to){
-    document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.nav===to));
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    el('page-'+to).classList.add('active');
-    if(to==='home') renderActivity();
+    document.querySelectorAll('aside .menu button').forEach(b=>b.classList.toggle('active', b.dataset.nav===to));
+    document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));
+    document.getElementById('view-'+to).classList.remove('hidden');
+    if(to==='dashboard') renderList();
   }
-  document.querySelectorAll('[data-nav]').forEach(n=>n.addEventListener('click', e=>{
-    const to = e.currentTarget.dataset.nav;
-    nav(to);
+  document.querySelectorAll('aside .menu button,[data-nav]').forEach(b=>b.addEventListener('click',e=>{
+    nav(e.currentTarget.dataset.nav);
   }));
-  el('modalClose').onclick = modal.close;
-  el('modalCancel').onclick = modal.close;
 
-  // Render
   function render(){
-    el('balanceText').textContent = fmt(S.balance);
-    el('tierPill').textContent = 'Tier: ' + S.tier;
-    el('pointsText').textContent = S.points + ' pts';
+    document.getElementById('txtBal').textContent = fmt(S.balance);
+    document.getElementById('pillBalance').textContent = fmt(S.balance);
+    document.getElementById('tierText').textContent = S.tier;
+    document.getElementById('pointsText').textContent = S.points;
   }
-  function renderActivity(){
-    const wrap = el('activityList');
-    if(!S.tx.length){ wrap.innerHTML = '<div class="row"><div class="left"><div class="ico-sm">🗒️</div><div><div class="title">No activity</div><div class="sub">Start by topping up or paying a bill</div></div></div></div>'; return; }
+  function renderList(){
+    const wrap = document.getElementById('listActivity');
     wrap.innerHTML = '';
-    S.tx.slice(0,8).forEach(t=>{
-      const div = document.createElement('div'); div.className='row';
-      const sign = t.type==='credit' ? '+' : '-';
-      const tagClass = t.status==='COMPLETED'?'ok':(t.status==='PENDING'?'pend':'err');
-      div.innerHTML = `
-        <div class="left">
-          <div class="ico-sm">${t.icon||'💱'}</div>
-          <div>
-            <div class="title">${t.title}</div>
-            <div class="sub">${new Date(t.ts).toLocaleString('id-ID')} • ${t.status}</div>
-          </div>
-        </div>
+    if(!S.tx.length){ wrap.innerHTML = '<div class="row"><div>No activity yet</div></div>'; return; }
+    S.tx.slice(0,12).forEach(t=>{
+      const tag = t.status==='COMPLETED'?'ok':(t.status==='PENDING'?'pend':'err');
+      const sign = t.type==='credit'?'+':'-';
+      const row = document.createElement('div');
+      row.className='row';
+      row.innerHTML = `<div>${t.title}<div style="color:#aab1bf; font-size:12px">${new Date(t.ts).toLocaleString('id-ID')}</div></div>
         <div style="display:flex; align-items:center; gap:8px">
-          <div class="tag ${tagClass}">${t.status}</div>
-          <div style="min-width:110px; text-align:right">${sign} ${fmt(t.amount)}</div>
+          <span class="tag ${tag}">${t.status}</span>
+          <b style="min-width:120px; text-align:right">${sign} ${fmt(t.amount)}</b>
         </div>`;
-      wrap.appendChild(div);
+      wrap.appendChild(row);
     });
   }
 
-  // Actions
-  el('btnAddMoney').onclick = ()=> nav('topup');
-
-  el('btnTopup').onclick = ()=>{
-    const m = el('tuMethod').value;
-    const amt = +el('tuAmount').value||0;
-    if(amt<=0) return toast('Enter a valid amount');
-    const pendingId = 'TU'+Date.now();
-    S.tx.unshift({id:pendingId, ts:Date.now(), title:'Top-up '+m.toUpperCase(), amount:amt, type:'credit', status:'PENDING', icon:'🏦'});
-    S.save();
-    toast('Top-up created. Waiting for gateway...');
-    // simulate PG callback
+  // Quick top up
+  document.getElementById('btnTopUpQuick').onclick = ()=>{
+    const id='TQ'+Date.now(); const amt=100000;
+    S.tx.unshift({id, ts:Date.now(), title:'Top-up (Quick)', amount:amt, type:'credit', status:'PENDING'});
+    S.save(); toast('Top-up created (pending gateway)');
     setTimeout(()=>{
-      const success = Math.random()>0.15; // 85% success
-      const t = S.tx.find(x=>x.id===pendingId);
-      if(!t) return;
-      if(success){
-        t.status='COMPLETED'; S.balance += amt; toast('Top-up successful');
-      }else{
-        t.status='FAILED'; toast('Top-up failed');
-      }
-      S.save();
-      nav('home');
-    }, 1400);
+      const ok=Math.random()>0.15; const t=S.tx.find(x=>x.id===id); if(!t)return;
+      if(ok){ t.status='COMPLETED'; S.balance+=amt; toast('Top-up successful'); }
+      else { t.status='FAILED'; toast('Top-up failed'); }
+      S.save(); nav('dashboard');
+    },1400);
   };
 
-  el('btnTransfer').onclick = ()=>{
-    const to = el('tfRecipient').value.trim();
-    const amt = +el('tfAmount').value||0;
+  // Transfer
+  document.getElementById('w_send').onclick = ()=>{
+    const to = document.getElementById('w_recipient').value.trim();
+    const amt = +document.getElementById('w_amount').value||0;
     if(!to) return toast('Enter recipient');
     if(amt<=0) return toast('Enter amount');
-    if(amt>S.balance) return toast('Insufficient balance');
-    // risk/pending
-    const pending = Math.random()<0.15;
-    const id = 'TF'+Date.now();
+    if(amt>S.balance) return toast('Insufficient funds');
+    const id='TF'+Date.now(); const pending=Math.random()<0.15;
     if(pending){
-      S.tx.unshift({id, ts:Date.now(), title:'P2P to '+to, amount:amt, type:'debit', status:'PENDING', icon:'➡️'}); S.save();
-      toast('Transfer pending review');
+      S.tx.unshift({id, ts:Date.now(), title:'P2P to '+to, amount:amt, type:'debit', status:'PENDING'});
+      S.save(); toast('Transfer pending');
       setTimeout(()=>{
-        const ok = Math.random()>0.3;
-        const t = S.tx.find(x=>x.id===id);
-        if(!t) return;
-        if(ok){ t.status='COMPLETED'; S.balance -= amt; toast('Transfer sent'); }
-        else{ t.status='FAILED'; toast('Transfer failed'); }
-        S.save(); nav('home');
-      }, 1500);
-    } else {
-      S.balance -= amt;
-      S.tx.unshift({id, ts:Date.now(), title:'P2P to '+to, amount:amt, type:'debit', status:'COMPLETED', icon:'➡️'});
-      S.save(); toast('Transfer sent'); nav('home');
+        const ok=Math.random()>0.3; const t=S.tx.find(x=>x.id===id); if(!t)return;
+        if(ok){ t.status='COMPLETED'; S.balance-=amt; toast('Transfer sent'); } else { t.status='FAILED'; toast('Transfer failed'); }
+        S.save(); nav('dashboard');
+      },1500);
+    }else{
+      S.tx.unshift({id, ts:Date.now(), title:'P2P to '+to, amount:amt, type:'debit', status:'COMPLETED'});
+      S.balance-=amt; S.save(); toast('Transfer sent'); nav('dashboard');
     }
   };
 
-  el('btnCashout').onclick = ()=>{
-    const agent = el('coAgent').value;
-    const amt = +el('coAmount').value||0;
+  // Cash-out
+  document.getElementById('w_cashout').onclick = ()=>{
+    const agent=document.getElementById('w_agent').value;
+    const amt=+document.getElementById('w_co_amount').value||0;
     if(amt<=0) return toast('Enter amount');
-    if(amt>S.balance) return toast('Insufficient balance');
-    const code = 'CO-' + Math.floor(100000+Math.random()*899999);
-    const id = 'CO'+Date.now();
-    S.tx.unshift({id, ts:Date.now(), title:'Cash-out '+agent+' ('+code+')', amount:amt, type:'debit', status:'PENDING', icon:'🏪'}); S.save();
-    modal.open('Cash-out Code', `<div style="font-size:14px">Show this code at the agent:</div>
-      <div style="margin-top:8px; font-size:22px; letter-spacing:2px; font-weight:800; background:linear-gradient(180deg,var(--gold-2),var(--gold)); -webkit-background-clip:text; color:transparent">${code}</div>`,
-      'Done',
-      ()=>{});
-    // simulate redemption
+    if(amt>S.balance) return toast('Insufficient funds');
+    const code='CO-'+Math.floor(100000+Math.random()*899999);
+    const id='CO'+Date.now();
+    S.tx.unshift({id, ts:Date.now(), title:'Cash-out '+agent+' ('+code+')', amount:amt, type:'debit', status:'PENDING'});
+    S.save(); toast('Show code: '+code);
     setTimeout(()=>{
-      const ok = Math.random()>0.2;
-      const t = S.tx.find(x=>x.id===id);
-      if(!t) return;
-      if(ok){ t.status='COMPLETED'; S.balance -= amt; toast('Cash-out completed'); }
-      else { t.status='FAILED'; toast('Cash-out failed'); }
-      S.save(); nav('home');
-    }, 3000);
+      const ok=Math.random()>0.2; const t=S.tx.find(x=>x.id===id); if(!t)return;
+      if(ok){ t.status='COMPLETED'; S.balance-=amt; toast('Cash-out done'); } else { t.status='FAILED'; toast('Cash-out failed'); }
+      S.save(); nav('dashboard');
+    },2600);
   };
 
-  el('btnPayBill').onclick = ()=>{
-    const biller = el('pbBiller').value.toUpperCase();
-    const ref = el('pbRef').value.trim()||'REF-'+Math.floor(Math.random()*99999);
-    const amt = +el('pbAmount').value||0;
+  // Bills
+  document.getElementById('w_paybill').onclick = ()=>{
+    const biller=document.getElementById('w_biller').value.toUpperCase();
+    const ref=document.getElementById('w_ref').value.trim()||('REF-'+Math.floor(Math.random()*99999));
+    const amt=+document.getElementById('w_bill_amount').value||0;
     if(amt<=0) return toast('Enter amount');
-    if(amt>S.balance) return toast('Insufficient balance');
-    const id = 'BP'+Date.now();
-    S.tx.unshift({id, ts:Date.now(), title:`Bill ${biller} (${ref})`, amount:amt, type:'debit', status:'PENDING', icon:'🧾'}); S.save();
-    toast('Processing with biller...');
+    if(amt>S.balance) return toast('Insufficient funds');
+    const id='BL'+Date.now();
+    S.tx.unshift({id, ts:Date.now(), title:`Bill ${biller} (${ref})`, amount:amt, type:'debit', status:'PENDING'});
+    S.save(); toast('Processing bill...');
     setTimeout(()=>{
-      const ok = Math.random()>0.12;
-      const t = S.tx.find(x=>x.id===id);
-      if(!t) return;
-      if(ok){ t.status='COMPLETED'; S.balance -= amt; S.points += Math.floor(amt/50000); toast('Bill paid'); }
+      const ok=Math.random()>0.12; const t=S.tx.find(x=>x.id===id); if(!t)return;
+      if(ok){ t.status='COMPLETED'; S.balance-=amt; S.points+=Math.floor(amt/40000); toast('Bill paid'); }
       else { t.status='FAILED'; toast('Payment failed'); }
-      S.save(); nav('home');
-    }, 1800);
+      S.save(); nav('dashboard');
+    },1600);
   };
 
-  el('btnQrPay').onclick = ()=>{
-    const amt = 25000; const id='QR'+Date.now();
-    if(amt>S.balance) return toast('Top up required');
-    S.tx.unshift({id, ts:Date.now(), title:'QR Payment', amount:amt, type:'debit', status:'COMPLETED', icon:'🔳'});
-    S.balance -= amt; S.points += 2; S.save(); toast('QR payment success'); nav('home');
+  // QR
+  document.getElementById('w_qr_pay').onclick = ()=>{
+    const amt=25000; if(amt>S.balance) return toast('Top up required');
+    const id='QR'+Date.now(); S.tx.unshift({id, ts:Date.now(), title:'QR Payment', amount:amt, type:'debit', status:'COMPLETED'});
+    S.balance-=amt; S.points+=2; S.save(); toast('QR payment success'); nav('dashboard');
   };
 
-  el('btnAddCard').onclick = ()=> toast('Card tokenized (demo)');
-  el('btnChargeCard').onclick = ()=>{
+  // Cards
+  document.getElementById('w_add_card').onclick = ()=> toast('Card tokenized (demo)');
+  document.getElementById('w_card_charge').onclick = ()=>{
     const amt=50000; const id='CC'+Date.now();
-    S.tx.unshift({id, ts:Date.now(), title:'Card Top-up', amount:amt, type:'credit', status:'PENDING', icon:'💳'}); S.save();
+    S.tx.unshift({id, ts:Date.now(), title:'Card Top-up', amount:amt, type:'credit', status:'PENDING'}); S.save(); toast('Charging card...');
     setTimeout(()=>{
-      const ok=Math.random()>0.1; const t=S.tx.find(x=>x.id===id);
-      if(!t) return;
-      if(ok){ t.status='COMPLETED'; S.balance+=amt; toast('Card top-up completed'); }
-      else { t.status='FAILED'; toast('Card top-up failed'); }
-      S.save(); nav('home');
-    }, 1500);
+      const ok=Math.random()>0.1; const t=S.tx.find(x=>x.id===id); if(!t)return;
+      if(ok){ t.status='COMPLETED'; S.balance+=amt; toast('Top-up completed'); } else { t.status='FAILED'; toast('Top-up failed'); }
+      S.save(); nav('dashboard');
+    },1500);
   };
 
-  el('btnRedeem').onclick = ()=>{
-    if(S.points<50) return toast('Not enough points');
-    S.points -= 50; S.save(); toast('Redeemed 50 pts for voucher');
+  // Settings
+  document.getElementById('w_upgrade').onclick = ()=>{ if(S.tier==='PLUS') return toast('Already PLUS'); S.tier='PLUS'; S.save(); toast('Tier upgraded'); };
+  document.getElementById('w_reset').onclick = ()=>{
+    localStorage.removeItem('ukiw_balance_w'); localStorage.removeItem('ukiw_points_w'); localStorage.removeItem('ukiw_tier_w'); localStorage.removeItem('ukiw_tx_w');
+    S.balance=500000; S.points=320; S.tier='BASIC'; S.tx=[]; S.save(); toast('Demo reset'); nav('dashboard');
   };
 
-  el('btnUpgrade').onclick = ()=>{
-    if(S.tier==='PLUS') return toast('Already PLUS');
-    S.tier='PLUS'; S.save(); toast('Tier upgraded');
-  };
-
-  el('btnReset').onclick = ()=>{
-    localStorage.removeItem('ukiw_balance');
-    localStorage.removeItem('ukiw_points');
-    localStorage.removeItem('ukiw_tier');
-    localStorage.removeItem('ukiw_tx');
-    S.balance=250000; S.points=120; S.tier='BASIC'; S.tx=[]; S.save();
-    toast('Demo data reset'); nav('home');
-  };
-
-  // Deep links from Home shortcuts
-  document.querySelectorAll('.actions .action').forEach(a=>{
-    a.addEventListener('click', e=>{
-      const to=e.currentTarget.dataset.nav;
-      if(to) nav(to);
-    });
-  });
-
-  // Initialize
-  render(); renderActivity();
+  // Init
+  render(); renderList();
 </script>
 </body>
 </html>
