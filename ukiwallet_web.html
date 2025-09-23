@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>UKI-Wallet Web (Prototype)</title>
+<style>
+  :root{
+    --gold:#C9A227; --gold-2:#E6C766; --gold-3:#8C6E00;
+    --bg:#0C0E12; --panel:#11151C; --card:#151A23; --muted:#a8afbc; --text:#F2F4F8;
+    --ok:#2ecc71; --warn:#f39c12; --err:#e74c3c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:Inter,system-ui,Arial; background:linear-gradient(180deg,#0A0C10,#0E1118 50%,#0A0C10); color:var(--text)}
+  .layout{display:grid; grid-template-columns:240px 1fr; min-height:100vh}
+  aside{
+    background:#0d1117; border-right:1px solid #1f2633; padding:16px; display:flex; flex-direction:column; gap:12px;
+  }
+  .logoRow{display:flex; align-items:center; gap:10px}
+  .logo{width:36px; height:36px; border-radius:12px; background: radial-gradient(120% 120% at 20% 20%, var(--gold-2), var(--gold)); border:1px solid rgba(255,255,255,0.18)}
+  .brand{font-weight:700}
+  .menu{display:flex; flex-direction:column; gap:8px; margin-top:12px}
+  .menu button{
+    text-align:left; width:100%; padding:10px 12px; border-radius:10px; border:1px solid #223044; background:#0e131a; color:#cfd6e2; cursor:pointer
+  }
+  .menu button.active{border-color:#3a4a66; color:var(--gold-2); background:#121826}
+  .tier{margin-top:auto; padding:10px; border:1px dashed #2b3850; border-radius:10px; color:#d9d9d9; font-size:12px}
+
+  header{
+    height:60px; display:flex; align-items:center; gap:12px; padding:0 16px;
+    border-bottom:1px solid #1f2633; background:rgba(10,12,16,0.6); backdrop-filter:blur(8px); position:sticky; top:0; z-index:5;
+  }
+  .sp{margin-left:auto; display:flex; align-items:center; gap:10px}
+  .pill{padding:6px 10px; border-radius:999px; color:#121316; font-size:12px; font-weight:700;
+    background:linear-gradient(180deg,var(--gold-2),var(--gold)); border:1px solid rgba(0,0,0,0.25);
+  }
+
+  main{padding:16px; display:grid; grid-template-columns:1.2fr 1fr; gap:16px}
+  .card{
+    background:linear-gradient(180deg,#151a23,#0f141b); border:1px solid #263044; border-radius:14px; padding:16px; box-shadow:0 4px 24px rgba(0,0,0,0.35);
+  }
+  h2{margin:0 0 10px}
+  .balance{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:8px
+  }
+  .amt{
+    font-size:34px; font-weight:800; background:linear-gradient(180deg,var(--gold-2),var(--gold)); -webkit-background-clip:text; color:transparent; text-shadow:0 2px 18px rgba(233,196,106,0.2)
+  }
+  .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
+  .btn{
+    padding:12px 10px; border-radius:10px; border:1px solid #2b3850; background:#0e131a; color:#e6e6e6; cursor:pointer;
+  }
+  .btn.primary{background:linear-gradient(180deg,var(--gold-2),var(--gold)); color:#151515; font-weight:700; border-color:#7a5b00}
+  .row{display:flex; align-items:center; justify-content:space-between; padding:10px; border:1px solid #263044; border-radius:10px; margin:8px 0; background:#121826}
+  .tag{font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid #2b3850}
+  .ok{color:#90ffb5; background:#0b1b12} .err{color:#ffc0c0; background:#2a0f12} .pend{color:#ffe39b; background:#281c06}
+  .list{max-height:380px; overflow:auto}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  input, select{width:100%; padding:10px 12px; border-radius:10px; background:#0f1218; border:1px solid #2b3242; color:#e0e0e0; outline:none}
+  label{font-size:12px; color:#b9c0ce}
+  .toast{position:fixed; right:16px; bottom:16px; background:#0b0f15; border:1px solid #2b3242; color:#eaeaea; padding:10px 14px; border-radius:12px; display:none; z-index:30}
+  .hidden{display:none}
+  @media (max-width: 980px){ .layout{grid-template-columns:1fr} aside{display:none} main{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <div class="logoRow"><div class="logo"></div><div class="brand">UKI-Wallet</div></div>
+    <div class="menu">
+      <button data-nav="dashboard" class="active">Dashboard</button>
+      <button data-nav="transfer">Transfer</button>
+      <button data-nav="cashout">Cash-out (Agent)</button>
+      <button data-nav="bills">Bills & Taxes</button>
+      <button data-nav="qr">QR Payment</button>
+      <button data-nav="cards">Cards</button>
+      <button data-nav="settings">Settings</button>
+    </div>
+    <div class="tier">Tier: <b id="tierText">BASIC</b><br/>Points: <b id="pointsText">0</b></div>
+  </aside>
+
+  <div style="display:flex; flex-direction:column; min-width:0">
+    <header>
+      <h3 style="margin:0">Web Console</h3>
+      <div class="sp">
+        <button class="btn" id="btnTopUpQuick">Top-up Rp100.000</button>
+        <div class="pill" id="pillBalance">Rp 0</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="card" id="view-dashboard">
+        <h2>Overview</h2>
+        <div class="balance">
+          <div>
+            <div style="color:#c7cdd8; font-size:13px">Available Balance</div>
+            <div class="amt" id="txtBal">Rp 0</div>
+          </div>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+            <button class="btn primary" data-nav="transfer">Transfer</button>
+            <button class="btn primary" data-nav="bills">Pay Bills</button>
+            <button class="btn primary" data-nav="qr">Scan QR</button>
+          </div>
+        </div>
+        <div class="list" id="listActivity"></div>
+      </section>
+
+      <section class="card hidden" id="view-transfer">
+        <h2>Transfer Money</h2>
+        <div class="grid2">
+          <label>Recipient
+            <input id="w_recipient" placeholder="+62xxxxxxxxxx"/>
+          </label>
+          <label>Amount
+            <input id="w_amount" type="number" min="0" step="1000" placeholder="50000"/>
+          </label>
+        </div>
+        <div style="margin-top:10px" class="grid2">
+          <button class="btn" data-nav="dashboard">Cancel</button>
+          <button class="btn primary" id="w_send">Send</button>
+        </div>
+      </section>
+
+      <section class="card hidden" id="view-cashout">
+        <h2>Cash-out (Agent, e.g., Indomaret)</h2>
+        <div class="grid2">
+          <label>Agent
+            <select id="w_agent">
+              <option value="indomaret">Indomaret</option>
+              <option value="alfamart">Alfamart</option>
+              <option value="pos">POS Agent</option>
+            </select>
+          </label>
+          <label>Amount
+            <input id="w_co_amount" type="number" min="0" step="1000" placeholder="100000"/>
+          </label>
+        </div>
+        <div style="margin-top:10px" class="grid2">
+          <button class="btn" data-nav="dashboard">Cancel</button>
+          <button class="btn primary" id="w_cashout">Generate Code</button>
+        </div>
+      </section>
+
+      <section class="card hidden" id="view-bills">
+        <h2>Bills & Taxes</h2>
+        <div class="grid2">
+          <label>Biller
+            <select id="w_biller">
+              <option value="pln">Electricity (PLN)</option>
+              <option value="pdam">Water (PDAM)</option>
+              <option value="pajak">Taxes</option>
+              <option value="telco">Telco</option>
+            </select>
+          </label>
+          <label>Reference
+            <input id="w_ref" placeholder="Customer No / Tax ID"/>
+          </label>
+        </div>
+        <div class="grid2" style="margin-top:10px">
+          <label>Amount
+            <input id="w_bill_amount" type="number" min="0" step="1000" placeholder="150000"/>
+          </label>
+          <label>Funding
+            <select id="w_funding">
+              <option value="wallet">Wallet</option>
+              <option value="split">Split (Wallet + Card)</option>
+            </select>
+          </label>
+        </div>
+        <div style="margin-top:10px" class="grid2">
+          <button class="btn" data-nav="dashboard">Cancel</button>
+          <button class="btn primary" id="w_paybill">Pay</button>
+        </div>
+      </section>
+
+      <section class="card hidden" id="view-qr">
+        <h2>QR Payment</h2>
+        <div style="display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:center">
+          <div style="font-size:80px; text-align:center">🔳</div>
+          <div>
+            <div style="color:#c7cdd8; font-size:13px; margin-bottom:6px">Simulated QR</div>
+            <button class="btn primary" id="w_qr_pay">Pay Rp25.000</button>
+            <div style="margin-top:8px; color:#c7cdd8; font-size:12px">Supports tips, vouchers, points (simulated).</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card hidden" id="view-cards">
+        <h2>Cards</h2>
+        <div class="row"><div>Visa •••• 4242</div><div><span class="tag">Default</span></div></div>
+        <div class="grid2" style="margin-top:10px">
+          <button class="btn" id="w_add_card">Add Card</button>
+          <button class="btn primary" id="w_card_charge">Charge Rp50.000</button>
+        </div>
+      </section>
+
+      <section class="card hidden" id="view-settings">
+        <h2>Settings</h2>
+        <div class="grid2">
+          <button class="btn" id="w_upgrade">Upgrade to PLUS</button>
+          <button class="btn" id="w_reset">Reset Demo Data</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const S = {
+    balance: +(localStorage.getItem('ukiw_balance_w') ?? 500000),
+    points: +(localStorage.getItem('ukiw_points_w') ?? 320),
+    tier: localStorage.getItem('ukiw_tier_w') ?? 'BASIC',
+    tx: JSON.parse(localStorage.getItem('ukiw_tx_w') ?? '[]'),
+    save(){
+      localStorage.setItem('ukiw_balance_w', S.balance);
+      localStorage.setItem('ukiw_points_w', S.points);
+      localStorage.setItem('ukiw_tier_w', S.tier);
+      localStorage.setItem('ukiw_tx_w', JSON.stringify(S.tx.slice(0,40)));
+      render();
+    }
+  };
+  const fmt = n => 'Rp ' + (n||0).toLocaleString('id-ID');
+  const toast = (m,ms=1800)=>{ const t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; setTimeout(()=>t.style.display='none',ms); };
+
+  function nav(to){
+    document.querySelectorAll('aside .menu button').forEach(b=>b.classList.toggle('active', b.dataset.nav===to));
+    document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));
+    document.getElementById('view-'+to).classList.remove('hidden');
+    if(to==='dashboard') renderList();
+  }
+  document.querySelectorAll('aside .menu button,[data-nav]').forEach(b=>b.addEventListener('click',e=>{
+    nav(e.currentTarget.dataset.nav);
+  }));
+
+  function render(){
+    document.getElementById('txtBal').textContent = fmt(S.balance);
+    document.getElementById('pillBalance').textContent = fmt(S.balance);
+    document.getElementById('tierText').textContent = S.tier;
+    document.getElementById('pointsText').textContent = S.points;
+  }
+  function renderList(){
+    const wrap = document.getElementById('listActivity');
+    wrap.innerHTML = '';
+    if(!S.tx.length){ wrap.innerHTML = '<div class="row"><div>No activity yet</div></div>'; return; }
+    S.tx.slice(0,12).forEach(t=>{
+      const tag = t.status==='COMPLETED'?'ok':(t.status==='PENDING'?'pend':'err');
+      const sign = t.type==='credit'?'+':'-';
+      const row = document.createElement('div');
+      row.className='row';
+      row.innerHTML = `<div>${t.title}<div style="color:#aab1bf; font-size:12px">${new Date(t.ts).toLocaleString('id-ID')}</div></div>
+        <div style="display:flex; align-items:center; gap:8px">
+          <span class="tag ${tag}">${t.status}</span>
+          <b style="min-width:120px; text-align:right">${sign} ${fmt(t.amount)}</b>
+        </div>`;
+      wrap.appendChild(row);
+    });
+  }
+
+  // Quick top up
+  document.getElementById('btnTopUpQuick').onclick = ()=>{
+    const id='TQ'+Date.now(); const amt=100000;
+    S.tx.unshift({id, ts:Date.now(), title:'Top-up (Quick)', amount:amt, type:'credit', status:'PENDING'});
+    S.save(); toast('Top-up created (pending gateway)');
+    setTimeout(()=>{
+      const ok=Math.random()>0.15; const t=S.tx.find(x=>x.id===id); if(!t)return;
+      if(ok){ t.status='COMPLETED'; S.balance+=amt; toast('Top-up successful'); }
+      else { t.status='FAILED'; toast('Top-up failed'); }
+      S.save(); nav('dashboard');
+    },1400);
+  };
+
+  // Transfer
+  document.getElementById('w_send').onclick = ()=>{
+    const to = document.getElementById('w_recipient').value.trim();
+    const amt = +document.getElementById('w_amount').value||0;
+    if(!to) return toast('Enter recipient');
+    if(amt<=0) return toast('Enter amount');
+    if(amt>S.balance) return toast('Insufficient funds');
+    const id='TF'+Date.now(); const pending=Math.random()<0.15;
+    if(pending){
+      S.tx.unshift({id, ts:Date.now(), title:'P2P to '+to, amount:amt, type:'debit', status:'PENDING'});
+      S.save(); toast('Transfer pending');
+      setTimeout(()=>{
+        const ok=Math.random()>0.3; const t=S.tx.find(x=>x.id===id); if(!t)return;
+        if(ok){ t.status='COMPLETED'; S.balance-=amt; toast('Transfer sent'); } else { t.status='FAILED'; toast('Transfer failed'); }
+        S.save(); nav('dashboard');
+      },1500);
+    }else{
+      S.tx.unshift({id, ts:Date.now(), title:'P2P to '+to, amount:amt, type:'debit', status:'COMPLETED'});
+      S.balance-=amt; S.save(); toast('Transfer sent'); nav('dashboard');
+    }
+  };
+
+  // Cash-out
+  document.getElementById('w_cashout').onclick = ()=>{
+    const agent=document.getElementById('w_agent').value;
+    const amt=+document.getElementById('w_co_amount').value||0;
+    if(amt<=0) return toast('Enter amount');
+    if(amt>S.balance) return toast('Insufficient funds');
+    const code='CO-'+Math.floor(100000+Math.random()*899999);
+    const id='CO'+Date.now();
+    S.tx.unshift({id, ts:Date.now(), title:'Cash-out '+agent+' ('+code+')', amount:amt, type:'debit', status:'PENDING'});
+    S.save(); toast('Show code: '+code);
+    setTimeout(()=>{
+      const ok=Math.random()>0.2; const t=S.tx.find(x=>x.id===id); if(!t)return;
+      if(ok){ t.status='COMPLETED'; S.balance-=amt; toast('Cash-out done'); } else { t.status='FAILED'; toast('Cash-out failed'); }
+      S.save(); nav('dashboard');
+    },2600);
+  };
+
+  // Bills
+  document.getElementById('w_paybill').onclick = ()=>{
+    const biller=document.getElementById('w_biller').value.toUpperCase();
+    const ref=document.getElementById('w_ref').value.trim()||('REF-'+Math.floor(Math.random()*99999));
+    const amt=+document.getElementById('w_bill_amount').value||0;
+    if(amt<=0) return toast('Enter amount');
+    if(amt>S.balance) return toast('Insufficient funds');
+    const id='BL'+Date.now();
+    S.tx.unshift({id, ts:Date.now(), title:`Bill ${biller} (${ref})`, amount:amt, type:'debit', status:'PENDING'});
+    S.save(); toast('Processing bill...');
+    setTimeout(()=>{
+      const ok=Math.random()>0.12; const t=S.tx.find(x=>x.id===id); if(!t)return;
+      if(ok){ t.status='COMPLETED'; S.balance-=amt; S.points+=Math.floor(amt/40000); toast('Bill paid'); }
+      else { t.status='FAILED'; toast('Payment failed'); }
+      S.save(); nav('dashboard');
+    },1600);
+  };
+
+  // QR
+  document.getElementById('w_qr_pay').onclick = ()=>{
+    const amt=25000; if(amt>S.balance) return toast('Top up required');
+    const id='QR'+Date.now(); S.tx.unshift({id, ts:Date.now(), title:'QR Payment', amount:amt, type:'debit', status:'COMPLETED'});
+    S.balance-=amt; S.points+=2; S.save(); toast('QR payment success'); nav('dashboard');
+  };
+
+  // Cards
+  document.getElementById('w_add_card').onclick = ()=> toast('Card tokenized (demo)');
+  document.getElementById('w_card_charge').onclick = ()=>{
+    const amt=50000; const id='CC'+Date.now();
+    S.tx.unshift({id, ts:Date.now(), title:'Card Top-up', amount:amt, type:'credit', status:'PENDING'}); S.save(); toast('Charging card...');
+    setTimeout(()=>{
+      const ok=Math.random()>0.1; const t=S.tx.find(x=>x.id===id); if(!t)return;
+      if(ok){ t.status='COMPLETED'; S.balance+=amt; toast('Top-up completed'); } else { t.status='FAILED'; toast('Top-up failed'); }
+      S.save(); nav('dashboard');
+    },1500);
+  };
+
+  // Settings
+  document.getElementById('w_upgrade').onclick = ()=>{ if(S.tier==='PLUS') return toast('Already PLUS'); S.tier='PLUS'; S.save(); toast('Tier upgraded'); };
+  document.getElementById('w_reset').onclick = ()=>{
+    localStorage.removeItem('ukiw_balance_w'); localStorage.removeItem('ukiw_points_w'); localStorage.removeItem('ukiw_tier_w'); localStorage.removeItem('ukiw_tx_w');
+    S.balance=500000; S.points=320; S.tier='BASIC'; S.tx=[]; S.save(); toast('Demo reset'); nav('dashboard');
+  };
+
+  // Init
+  render(); renderList();
+</script>
+</body>
+</html>
