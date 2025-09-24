@@ -1,0 +1,224 @@
+/* ===== MOBILE BOTTOM NAVIGATION ===== */
+
+/* Navigation Container */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--nav-border);
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation List */
+.mobile-nav__list {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Navigation Item */
+.mobile-nav__item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* Navigation Link */
+.mobile-nav__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: var(--nav-inactive);
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  min-width: 60px;
+  position: relative;
+}
+
+.mobile-nav__link:hover {
+  color: var(--nav-active);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+/* Active Navigation Link */
+.mobile-nav__link--active {
+  color: var(--nav-active);
+  background: rgba(255, 215, 0, 0.15);
+}
+
+.mobile-nav__link--active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  background: var(--nav-active);
+  border-radius: 2px;
+}
+
+/* Navigation Icon */
+.mobile-nav__icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+  transition: transform 0.3s ease;
+}
+
+.mobile-nav__link--active .mobile-nav__icon {
+  transform: scale(1.1);
+}
+
+/* Navigation Text */
+.mobile-nav__text {
+  font-size: var(--font-xs);
+  font-weight: var(--font-medium);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Navigation Badge */
+.mobile-nav__badge {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: var(--error);
+  color: white;
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Specific Navigation Items */
+.mobile-nav__home .mobile-nav__icon::before {
+  content: '🏠';
+}
+
+.mobile-nav__analytics .mobile-nav__icon::before {
+  content: '📊';
+}
+
+.mobile-nav__history .mobile-nav__icon::before {
+  content: '📋';
+}
+
+.mobile-nav__notifications .mobile-nav__icon::before {
+  content: '🔔';
+}
+
+.mobile-nav__profile .mobile-nav__icon::before {
+  content: '👤';
+}
+
+/* Alternative Icon Styles */
+.mobile-nav__icon--home::before { content: '🏠'; }
+.mobile-nav__icon--analytics::before { content: '📊'; }
+.mobile-nav__icon--history::before { content: '📋'; }
+.mobile-nav__icon--notifications::before { content: '🔔'; }
+.mobile-nav__icon--profile::before { content: '👤'; }
+
+/* Hover Effects */
+.mobile-nav__link:hover .mobile-nav__icon {
+  transform: scale(1.05);
+}
+
+.mobile-nav__link:active {
+  transform: scale(0.95);
+}
+
+/* Animation for Active State */
+@keyframes navActivate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.mobile-nav__link--active .mobile-nav__icon {
+  animation: navActivate 0.3s ease-in-out;
+}
+
+/* Safe Area Support */
+@supports (padding: max(0px)) {
+  .mobile-nav {
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 320px) {
+  .mobile-nav__link {
+    padding: 6px 8px;
+    min-width: 50px;
+  }
+  
+  .mobile-nav__icon {
+    font-size: 18px;
+  }
+  
+  .mobile-nav__text {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-nav {
+    display: none;
+  }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .mobile-nav {
+    background: rgba(10, 10, 10, 0.95);
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Accessibility */
+.mobile-nav__link:focus {
+  outline: 2px solid var(--nav-active);
+  outline-offset: 2px;
+}
+
+.mobile-nav__link:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .mobile-nav {
+    border-top-width: 2px;
+  }
+  
+  .mobile-nav__link--active {
+    background: var(--nav-active);
+    color: var(--text-dark);
+  }
+}

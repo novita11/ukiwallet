@@ -1,8 +1,438 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UKI-Wallet Prototypes</title></head>
-<body style="font-family:Arial; padding:24px">
-  <h2>UKI-Wallet Prototypes (Gold Theme)</h2>
-  <p><a href="./ukiwallet_mobile.html">Mobile Prototype</a></p>
-  <p><a href="./ukiwallet_web.html">Web Prototype</a></p>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>UKI-Wallet - Dompet Digital Indonesia</title>
+  <meta name="description" content="UKI-Wallet - Aplikasi dompet digital dengan tema emas yang elegan"/>
+  
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 400px;
+      padding: 20px;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: #FFD700;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: #000;
+      margin: 0 auto 20px;
+      animation: pulse 2s infinite;
+    }
+    
+    .app-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .app-subtitle {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 30px;
+    }
+    
+    .platform-selector {
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid #333;
+    }
+    
+    .selector-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #FFD700;
+    }
+    
+    .platform-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .platform-option {
+      background: #2a2a2a;
+      border: 2px solid #333;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .platform-option:hover {
+      border-color: #FFD700;
+      background: #333;
+    }
+    
+    .platform-option.selected {
+      border-color: #FFD700;
+      background: #2a2a1a;
+    }
+    
+    .platform-icon {
+      font-size: 24px;
+      width: 32px;
+      text-align: center;
+    }
+    
+    .platform-info {
+      flex: 1;
+      text-align: left;
+    }
+    
+    .platform-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .platform-desc {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .continue-btn {
+      background: #FFD700;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    
+    .continue-btn:hover {
+      background: #FFC700;
+      transform: translateY(-2px);
+    }
+    
+    .continue-btn:disabled {
+      background: #444;
+      color: #888;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .auto-redirect {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #666;
+    }
+    
+    .loading-state {
+      display: none;
+    }
+    
+    .loading-state.active {
+      display: block;
+    }
+    
+    .loading-text {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    
+    .loading-subtext {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #333;
+      border-top: 2px solid #FFD700;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">UW</div>
+    <div class="app-title">UKI-Wallet</div>
+    <div class="app-subtitle">Dompet Digital Indonesia</div>
+    
+    <!-- Platform Selector -->
+    <div class="platform-selector" id="platformSelector">
+      <div class="selector-title">Pilih Platform</div>
+      <div class="platform-options">
+        <div class="platform-option" data-platform="auto">
+          <div class="platform-icon">🔄</div>
+          <div class="platform-info">
+            <div class="platform-name">Auto Detect</div>
+            <div class="platform-desc">Deteksi otomatis berdasarkan perangkat</div>
+          </div>
+        </div>
+        <div class="platform-option" data-platform="mobile">
+          <div class="platform-icon">📱</div>
+          <div class="platform-info">
+            <div class="platform-name">Mobile</div>
+            <div class="platform-desc">Optimized untuk smartphone & tablet</div>
+          </div>
+        </div>
+        <div class="platform-option" data-platform="web">
+          <div class="platform-icon">💻</div>
+          <div class="platform-info">
+            <div class="platform-name">Web</div>
+            <div class="platform-desc">Optimized untuk desktop & laptop</div>
+          </div>
+        </div>
+      </div>
+      
+      <button class="continue-btn" id="continueBtn" disabled>
+        Lanjutkan
+      </button>
+      
+      <div class="auto-redirect" id="autoRedirect">
+        Auto redirect dalam <span id="countdown">5</span> detik...
+      </div>
+    </div>
+    
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loadingText">Memuat aplikasi...</div>
+      <div class="loading-subtext" id="loadingSubtext">Mohon tunggu sebentar</div>
+    </div>
+  </div>
 
-</body></html>
+  <script>
+    // Platform selection state
+    let selectedPlatform = 'auto';
+    let countdownTimer = null;
+    let countdownValue = 5;
+    
+    // DOM elements
+    const platformSelector = document.getElementById('platformSelector');
+    const loadingState = document.getElementById('loadingState');
+    const continueBtn = document.getElementById('continueBtn');
+    const autoRedirect = document.getElementById('autoRedirect');
+    const countdown = document.getElementById('countdown');
+    const loadingText = document.getElementById('loadingText');
+    const loadingSubtext = document.getElementById('loadingSubtext');
+    
+    // Device detection function
+    function detectDevice() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+      const isTablet = /ipad|android(?!.*mobile)/i.test(userAgent);
+      const screenWidth = window.innerWidth;
+      
+      // Consider screen width as well
+      const isMobileScreen = screenWidth <= 768;
+      
+      return isMobile || isMobileScreen;
+    }
+    
+    // Get redirect URL based on platform
+    function getRedirectUrl(platform) {
+      switch(platform) {
+        case 'mobile':
+          return './mobile/index.html';
+        case 'web':
+          return './web/index.html';
+        case 'auto':
+        default:
+          return detectDevice() ? './mobile/index.html' : './web/index.html';
+      }
+    }
+    
+    // Show loading and redirect
+    function redirectToPlatform(platform) {
+      const url = getRedirectUrl(platform);
+      const platformName = platform === 'auto' ? (detectDevice() ? 'Mobile' : 'Web') : platform;
+      
+      // Show loading state
+      platformSelector.style.display = 'none';
+      loadingState.classList.add('active');
+      loadingText.textContent = `Memuat ${platformName} App...`;
+      loadingSubtext.textContent = 'Mohon tunggu sebentar';
+      
+      // Clear any existing countdown
+      if (countdownTimer) {
+        clearInterval(countdownTimer);
+      }
+      
+      // Redirect after delay
+      setTimeout(() => {
+        window.location.href = url;
+      }, 1500);
+    }
+    
+    // Start countdown for auto redirect
+    function startCountdown() {
+      countdownValue = 5;
+      countdown.textContent = countdownValue;
+      autoRedirect.style.display = 'block';
+      
+      countdownTimer = setInterval(() => {
+        countdownValue--;
+        countdown.textContent = countdownValue;
+        
+        if (countdownValue <= 0) {
+          clearInterval(countdownTimer);
+          redirectToPlatform('auto');
+        }
+      }, 1000);
+    }
+    
+    // Stop countdown
+    function stopCountdown() {
+      if (countdownTimer) {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+      }
+      autoRedirect.style.display = 'none';
+    }
+    
+    // Handle platform selection
+    function selectPlatform(platform) {
+      selectedPlatform = platform;
+      
+      // Update UI
+      document.querySelectorAll('.platform-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      document.querySelector(`[data-platform="${platform}"]`).classList.add('selected');
+      
+      // Enable continue button
+      continueBtn.disabled = false;
+      
+      // Handle auto redirect countdown
+      if (platform === 'auto') {
+        startCountdown();
+      } else {
+        stopCountdown();
+      }
+    }
+    
+    // Initialize app
+    function initApp() {
+      // Set up platform option click handlers
+      document.querySelectorAll('.platform-option').forEach(option => {
+        option.addEventListener('click', () => {
+          const platform = option.dataset.platform;
+          selectPlatform(platform);
+        });
+      });
+      
+      // Set up continue button
+      continueBtn.addEventListener('click', () => {
+        if (selectedPlatform) {
+          redirectToPlatform(selectedPlatform);
+        }
+      });
+      
+      // Default to auto detect
+      selectPlatform('auto');
+      
+      // Handle resize events for auto detect
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        if (selectedPlatform === 'auto') {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            // Update countdown if still on auto
+            if (selectedPlatform === 'auto') {
+              stopCountdown();
+              startCountdown();
+            }
+          }, 500);
+        }
+      });
+      
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        switch(e.key) {
+          case '1':
+            selectPlatform('auto');
+            break;
+          case '2':
+            selectPlatform('mobile');
+            break;
+          case '3':
+            selectPlatform('web');
+            break;
+          case 'Enter':
+            if (!continueBtn.disabled) {
+              redirectToPlatform(selectedPlatform);
+            }
+            break;
+          case 'Escape':
+            stopCountdown();
+            break;
+        }
+      });
+    }
+    
+    // Start app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initApp);
+    
+    // Save user preference
+    function savePreference(platform) {
+      if (platform !== 'auto') {
+        localStorage.setItem('uki-wallet-platform-preference', platform);
+      }
+    }
+    
+    // Load user preference
+    function loadPreference() {
+      const saved = localStorage.getItem('uki-wallet-platform-preference');
+      if (saved && ['mobile', 'web'].includes(saved)) {
+        return saved;
+      }
+      return 'auto';
+    }
+    
+    // Update continue button to save preference
+    const originalContinueHandler = continueBtn?.onclick;
+    if (continueBtn) {
+      continueBtn.addEventListener('click', () => {
+        savePreference(selectedPlatform);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+/* ===== COLOR VARIABLES ===== */
+:root {
+  /* Primary Colors */
+  --primary-gold: #FFD700;
+  --primary-dark: #1a1a2e;
+  --primary-blue: #16213e;
+  
+  /* Background Colors */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #2a2a2a;
+  --bg-gradient-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --bg-gradient-secondary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --text-dark: #333333;
+  
+  /* Border Colors */
+  --border-primary: rgba(255, 215, 0, 0.2);
+  --border-secondary: rgba(255, 255, 255, 0.1);
+  --border-muted: rgba(255, 255, 255, 0.05);
+  
+  /* Status Colors */
+  --success: #43e97b;
+  --warning: #fee140;
+  --error: #f5576c;
+  --info: #4facfe;
+  
+  /* Action Colors */
+  --action-investment: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --action-savings: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --action-loan: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --action-insurance: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  --action-cashout: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --action-bills: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  
+  /* Navigation Colors */
+  --nav-active: var(--primary-gold);
+  --nav-inactive: rgba(255, 255, 255, 0.6);
+  --nav-bg: rgba(26, 26, 46, 0.95);
+  --nav-border: rgba(255, 215, 0, 0.1);
+}
+
+/* Dark Theme Overrides */
+.dark-theme {
+  --bg-primary: #000000;
+  --bg-secondary: #111111;
+  --bg-card: #1a1a1a;
+}
+
+/* Light Theme Overrides */
+.light-theme {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-muted: rgba(0, 0, 0, 0.5);
+  --border-secondary: rgba(0, 0, 0, 0.1);
+  --border-muted: rgba(0, 0, 0, 0.05);
+}

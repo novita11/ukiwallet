@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>UKI-Wallet Web - Konsol Dompet Digital</title>
+  <meta name="description" content="UKI-Wallet Web Console - Platform dompet digital dengan tema emas yang elegan"/>
+  <link rel="stylesheet" href="../assets/css/animations.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <style>
+    /* CSS Variables */
+    :root {
+      --gold: #C9A227;
+      --gold-2: #E6C766;
+      --gold-light: #F4E8A6;
+      --bg-primary: #0A0C10;
+      --bg-secondary: #0C0E12;
+      --bg-tertiary: #0E1118;
+      --panel-bg: #0D1117;
+      --card-bg: #151A23;
+      --card-secondary: #0F141B;
+      --text-primary: #F2F4F8;
+      --text-secondary: #CFD6E2;
+      --text-muted: #C7CDD8;
+      --border-primary: #1F2633;
+      --border-secondary: #263044;
+      --border-light: #2B3850;
+      --border-accent: #3A4A66;
+      --success: #90FFB5;
+      --success-bg: #0B1B12;
+      --error: #FFC0C0;
+      --error-bg: #2A0F12;
+      --warning: #FFE39B;
+      --warning-bg: #281C06;
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-medium: rgba(0, 0, 0, 0.2);
+      --shadow-heavy: rgba(0, 0, 0, 0.4);
+      --gold-glow: rgba(233, 196, 106, 0.3);
+      --backdrop-blur: rgba(10, 12, 16, 0.8);
+    }
+
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(180deg, var(--bg-primary), var(--bg-tertiary) 50%, var(--bg-primary));
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Layout Structure */
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      transition: grid-template-columns 0.3s ease;
+    }
+
+    /* Sidebar Styles */
+    aside {
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border-primary);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-primary);
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: radial-gradient(120% 120% at 20% 20%, var(--gold-2), var(--gold));
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--bg-primary);
+      box-shadow: 0 4px 12px var(--gold-glow);
+    }
+
+    .sidebar-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    /* Navigation Menu */
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .menu button {
+      text-align: left;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+      background: rgba(14, 19, 26, 0.8);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .menu button:hover {
+      background: rgba(14, 19, 26, 1);
+      border-color: var(--border-accent);
+      color: var(--text-primary);
+      transform: translateX(2px);
+    }
+
+    .menu button.active {
+      border-color: var(--gold);
+      color: var(--gold-2);
+      background: rgba(18, 24, 38, 0.9);
+      box-shadow: 0 2px 8px var(--gold-glow);
+    }
+
+    /* Tier Info */
+    .tier {
+      margin-top: auto;
+      padding: 16px;
+      border: 1px dashed var(--border-light);
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-size: 12px;
+      background: rgba(11, 15, 23, 0.5);
+      backdrop-filter: blur(8px);
+    }
+
+    .tier b {
+      color: var(--gold-2);
+      font-weight: 700;
+    }
+
+    /* Header Styles */
+    header {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--border-primary);
+      background: var(--backdrop-blur);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h3 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+
+    .header-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .pill {
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--bg-primary);
+      font-size: 13px;
+      font-weight: 700;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold));
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 8px var(--gold-glow);
+    }
+
+    /* Main Content */
+    main {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+      min-height: calc(100vh - 70px);
+    }
+
+    /* Card Styles */
+    .card {
+      background: linear-gradient(180deg, var(--card-bg), var(--card-secondary));
+      border: 1px solid var(--border-secondary);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 24px var(--shadow-light);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      height: fit-content;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px var(--shadow-medium);
+    }
+
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Button Styles */
+    .btn {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+      background: rgba(14, 19, 26, 0.8);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn:hover {
+      background: rgba(14, 19, 26, 1);
+      border-color: var(--border-accent);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, var(--gold-2), var(--gold));
+      color: var(--bg-primary);
+      font-weight: 700;
+      border-color: rgba(122, 91, 0, 0.5);
+      box-shadow: 0 2px 8px var(--gold-glow);
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px var(--gold-glow);
+    }
+
+    /* Grid Layouts */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    /* Balance Display */
+    .balance-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 16px;
+      background: rgba(11, 15, 23, 0.5);
+      border-radius: 12px;
+      border: 1px solid var(--border-primary);
+    }
+
+    .balance-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .balance-label {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .amt {
+      font-size: 36px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 18px var(--gold-glow);
+      line-height: 1.2;
+    }
+
+    /* List Styles */
+    .list {
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border: 1px solid var(--border-secondary);
+      border-radius: 12px;
+      background: rgba(18, 24, 38, 0.6);
+      transition: all 0.2s ease;
+    }
+
+    .row:hover {
+      background: rgba(18, 24, 38, 0.9);
+      border-color: var(--border-accent);
+    }
+
+    .row-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .row-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      background: radial-gradient(120% 120% at 20% 20%, #202534, #0F1218);
+      border: 1px solid var(--border-light);
+    }
+
+    .row-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .row-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .row-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Status Tags */
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-light);
+    }
+
+    .tag.ok {
+      color: var(--success);
+      background: var(--success-bg);
+      border-color: rgba(144, 255, 181, 0.3);
+    }
+
+    .tag.err {
+      color: var(--error);
+      background: var(--error-bg);
+      border-color: rgba(255, 192, 192, 0.3);
+    }
+
+    .tag.pend {
+      color: var(--warning);
+      background: var(--warning-bg);
+      border-color: rgba(255, 227, 155, 0.3);
+    }
+
+    /* Form Elements */
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(15, 18, 24, 0.8);
+      border: 1px solid var(--border-light);
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(230, 199, 102, 0.1);
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* Denominations */
+    .denoms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .denoms button {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+      background: rgba(15, 18, 24, 0.8);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .denoms button:hover,
+    .denoms button.sel {
+      background: var(--gold);
+      color: var(--bg-primary);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: rgba(11, 15, 21, 0.95);
+      border: 1px solid var(--border-light);
+      color: var(--text-primary);
+      padding: 12px 16px;
+      border-radius: 12px;
+      display: none;
+      z-index: 30;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px var(--shadow-medium);
+      font-size: 14px;
+      font-weight: 500;
+      max-width: 300px;
+    }
+
+    /* Utility Classes */
+    .hidden {
+      display: none;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      animation: fadeInUp 0.4s ease-out;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      main {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      
+      aside {
+        display: none;
+      }
+      
+      main {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+      
+      .card {
+        padding: 16px;
+      }
+      
+      .amt {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+      
+      .grid3 {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .header-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .balance-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+
+    /* Loading States */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid var(--gold);
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Scrollbar Styling */
+    .list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .list::-webkit-scrollbar-track {
+      background: rgba(15, 18, 24, 0.5);
+      border-radius: 3px;
+    }
+
+    .list::-webkit-scrollbar-thumb {
+      background: var(--border-light);
+      border-radius: 3px;
+    }
+
+    .list::-webkit-scrollbar-thumb:hover {
+      background: var(--border-accent);
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="animate-slideInLeft">
+    <div class="sidebar-header">
+      <div class="logo">UW</div>
+      <div class="sidebar-title">UKI-Wallet</div>
+    </div>
+    <div class="menu">
+      <button data-nav="dashboard" class="active">📊 Dashboard</button>
+      <button data-nav="analytics">📈 Analytics</button>
+      <button data-nav="topup">💰 Top-up</button>
+      <button data-nav="transfer">💸 Transfer</button>
+      <button data-nav="cashout">🏪 Tarik Tunai</button>
+      <button data-nav="bills">🧾 Tagihan & Pajak</button>
+      <button data-nav="buy">🛒 Pembelian</button>
+      <button data-nav="qr">📱 QR Payment</button>
+      <button data-nav="cards">💳 Kartu</button>
+      <button data-nav="settings">⚙️ Pengaturan</button>
+    </div>
+    <div class="tier">
+      Tier: <b id="tierText">BASIC</b><br/>
+      Points: <b id="pointsText">0</b>
+    </div>
+  </aside>
+
+  <div style="display:flex;flex-direction:column;min-width:0">
+    <header class="animate-slideInDown">
+      <h3>Konsol Web</h3>
+      <div class="header-actions">
+        <button class="btn primary animate-pulse" id="btnTopUpQuick">Top-up Rp100.000</button>
+        <div class="pill animate-glow" id="pillBalance">Rp 0</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="card animate-fadeIn" id="view-dashboard">
+        <h2>Overview</h2>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div><div style="color:#c7cdd8;font-size:13px">Available Balance</div><div class="amt animate-scaleIn" id="txtBal">Rp 0</div></div>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr)"><button class="btn primary card--animated" data-nav="topup">Top-up</button><button class="btn primary card--animated" data-nav="buy">Purchases</button><button class="btn primary card--animated" data-nav="qr">QR</button></div>
+        </div>
+        <div class="list" id="listActivity"></div>
+      </section>
+
+      <!-- Analytics Dashboard -->
+      <section class="card hidden animate-fadeIn" id="view-analytics">
+        <div class="dashboard-header">
+          <h2>Analytics Dashboard</h2>
+          <div class="period-selector">
+            <button class="btn active" data-period="week">Week</button>
+            <button class="btn" data-period="month">Month</button>
+            <button class="btn" data-period="year">Year</button>
+          </div>
+        </div>
+        
+        <div class="dashboard-summary">
+          <div class="summary-card animate-slideInUp">
+            <div class="summary-label">Total Income</div>
+            <div class="summary-value" id="totalIncome">Rp 0</div>
+            <div class="summary-change positive">+12.5%</div>
+          </div>
+          <div class="summary-card animate-slideInUp" style="animation-delay: 0.1s">
+            <div class="summary-label">Total Expense</div>
+            <div class="summary-value" id="totalExpense">Rp 0</div>
+            <div class="summary-change negative">-8.2%</div>
+          </div>
+          <div class="summary-card animate-slideInUp" style="animation-delay: 0.2s">
+            <div class="summary-label">Net Balance</div>
+            <div class="summary-value" id="netBalance">Rp 0</div>
+            <div class="summary-change positive">+4.3%</div>
+          </div>
+        </div>
+
+        <div class="dashboard-charts">
+          <div class="chart-container animate-slideInLeft">
+            <div class="chart-header">
+              <h3>Spending by Category</h3>
+              <button class="chart-toggle" data-chart="category">📊</button>
+            </div>
+            <div class="chart-content" id="categoryChart">
+              <div class="chart-placeholder">Category chart will appear here</div>
+            </div>
+          </div>
+          
+          <div class="chart-container animate-slideInRight">
+            <div class="chart-header">
+              <h3>Monthly Trends</h3>
+              <button class="chart-toggle" data-chart="trends">📈</button>
+            </div>
+            <div class="chart-content" id="trendsChart">
+              <div class="chart-placeholder">Trends chart will appear here</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-stats animate-slideInUp">
+          <div class="stat-item">
+            <span class="stat-label">Transactions</span>
+            <span class="stat-value" id="totalTransactions">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Avg. Transaction</span>
+            <span class="stat-value" id="avgTransaction">Rp 0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Most Used</span>
+            <span class="stat-value" id="mostUsed">-</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card hidden" id="view-topup">
+        <h2>Top-up</h2>
+        <div class="grid2">
+          <label>Method<select id="tuMethod"><option value="va">Bank VA / IB</option><option value="card">Credit/Debit Card (3DS)</option><option value="wallet">Other Wallet</option><option value="agent">Indomaret/Agent</option></select></label>
+          <label>Amount<input id="tuAmount" type="number" min="0" step="1000" placeholder="200000"/></label>
+        </div>
+        <div class="denoms" id="tuDenoms"></div>
+        <div class="grid2" style="margin-top:10px"><button class="btn" data-nav="dashboard">Back</button><button class="btn primary" id="btnTopup">Proceed</button></div>
+        <div class="row"><div>Notes</div><div><span class="tag">VA TTL 24h • Agent TTL 30m</span></div></div>
+      </section>
+
+      <section class="card hidden" id="view-transfer">
+        <h2>Transfer Money</h2>
+        <div class="grid2"><label>Recipient<input id="w_recipient" placeholder="+62xxxxxxxxxx"/></label><label>Amount<input id="w_amount" type="number" min="0" step="1000" placeholder="50000"/></label></div>
+        <div class="grid2" style="margin-top:10px"><button class="btn" data-nav="dashboard">Cancel</button><button class="btn primary" id="w_send">Send</button></div>
+      </section>
+
+      <section class="card hidden" id="view-cashout">
+        <h2>Cash-out (Agent, e.g., Indomaret)</h2>
+        <div class="grid2"><label>Agent<select id="w_agent"><option value="indomaret">Indomaret</option><option value="alfamart">Alfamart</option><option value="pos">POS Agent</option></select></label><label>Amount<input id="w_co_amount" type="number" min="0" step="1000" placeholder="100000"/></label></div>
+        <div class="grid2" style="margin-top:10px"><button class="btn" data-nav="dashboard">Cancel</button><button class="btn primary" id="w_cashout">Generate Code</button></div>
+      </section>
+
+      <section class="card hidden" id="view-bills">
+        <h2>Bills & Taxes</h2>
+        <div class="grid2"><label>Biller<select id="w_biller"><option value="pln_postpaid">PLN Postpaid</option><option value="pln_prepaid">PLN Prepaid (Token)</option><option value="pdam">Water (PDAM)</option><option value="telco">Telco (Postpaid)</option><option value="tax">Taxes</option></select></label><label>Reference<input id="w_ref" placeholder="Customer/Meter/Tax ID"/></label></div>
+        <div class="grid2" style="margin-top:10px"><label>Amount<input id="w_bill_amount" type="number" min="0" step="1000" placeholder="150000"/></label><label>Funding<select id="w_funding"><option value="wallet">Wallet</option><option value="split">Split (Wallet + Card)</option></select></label></div>
+        <div class="grid2" style="margin-top:10px"><button class="btn" data-nav="dashboard">Cancel</button><button class="btn primary" id="w_paybill">Pay</button></div>
+      </section>
+
+      <section class="card hidden" id="view-buy">
+        <h2>Purchases</h2>
+        <div class="grid3"><button class="btn" data-tab="pulsa">Pulsa</button><button class="btn" data-tab="data">Data</button><button class="btn" data-tab="game">Game Top-up</button></div>
+        <div id="tab-pulsa" class="buytab" style="margin-top:10px">
+          <div class="grid2"><label>Operator<select id="opPulsa"><option>Telkomsel</option><option>XL</option><option>Indosat</option><option>Tri</option></select></label><label>Phone<input id="phPulsa" placeholder="+62xxxxxxxxxx"/></label></div>
+          <div class="denoms" id="pulsaDenoms"></div>
+        </div>
+        <div id="tab-data" class="buytab hidden" style="margin-top:10px">
+          <div class="grid2"><label>Operator<select id="opData"><option>Telkomsel</option><option>XL</option><option>Indosat</option><option>Tri</option></select></label><label>Phone<input id="phData" placeholder="+62xxxxxxxxxx"/></label></div>
+          <div class="denoms" id="dataDenoms"></div>
+        </div>
+        <div id="tab-game" class="buytab hidden" style="margin-top:10px">
+          <div class="grid2"><label>Game<select id="gameSel"><option value="ML">Mobile Legends</option><option value="FF">Free Fire</option><option value="PUBG">PUBG</option></select></label><label>Game ID<input id="gameId" placeholder="User ID / Server"/></label></div>
+          <div class="denoms" id="gameDenoms"></div>
+        </div>
+        <div class="grid2" style="margin-top:10px"><button class="btn" data-nav="dashboard">Back</button><button class="btn primary" id="w_buy">Buy</button></div>
+      </section>
+
+      <section class="card hidden animate-fadeIn" id="view-qr">
+        <div class="qr-tabs">
+          <button class="qr-tab active" data-tab="scanner">📷 Scanner</button>
+          <button class="qr-tab" data-tab="generator">🔳 Generator</button>
+        </div>
+
+        <div class="qr-content" id="qr-scanner">
+          <div class="qr-scanner-frame animate-pulse">
+            <div class="scanner-overlay">
+              <div class="scanner-line"></div>
+            </div>
+            <div class="scanner-corners">
+              <div class="corner top-left"></div>
+              <div class="corner top-right"></div>
+              <div class="corner bottom-left"></div>
+              <div class="corner bottom-right"></div>
+            </div>
+            <div class="scanner-text">Position QR code within frame</div>
+          </div>
+          
+          <div class="qr-actions">
+            <button class="btn" id="qr-flash">💡 Flash</button>
+            <button class="btn primary" id="qr-scan">Start Scan</button>
+          </div>
+        </div>
+
+        <div class="qr-content hidden" id="qr-generator">
+          <div class="qr-generator-display">
+            <div class="qr-code-display" id="qr-display">
+              <div class="qr-pattern animate-scaleIn">
+                <div class="qr-grid">
+                  <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                  <div class="qr-dot"></div><div class="qr-dot active"></div><div class="qr-dot"></div>
+                  <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="qr-info">
+              <div class="qr-amount">Rp 25.000</div>
+              <div class="qr-merchant">UKI-Wallet Payment</div>
+            </div>
+          </div>
+          
+          <div class="qr-generator-actions">
+            <button class="btn" id="qr-generate">🔄 Generate New</button>
+            <button class="btn primary" id="qr-share">📤 Share QR</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card hidden" id="view-cards">
+        <h2>Cards</h2>
+        <div class="row"><div>Visa •••• 4242</div><div><span class="tag">Default</span></div></div>
+        <div class="grid2" style="margin-top:10px"><button class="btn" id="w_add_card">Add Card</button><button class="btn primary" id="w_card_charge">Charge Rp50.000</button></div>
+      </section>
+
+      <section class="card hidden" id="view-settings">
+        <h2>Settings</h2>
+        <div class="grid2"><button class="btn" id="w_upgrade">Upgrade to PLUS</button><button class="btn" id="w_reset">Reset Demo Data</button></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const S={balance:+(localStorage.getItem('ukiw_balance_w')??700000),points:+(localStorage.getItem('ukiw_points_w')??420),tier:localStorage.getItem('ukiw_tier_w')??'BASIC',tx:JSON.parse(localStorage.getItem('ukiw_tx_w')??'[]'),save(){localStorage.setItem('ukiw_balance_w',S.balance);localStorage.setItem('ukiw_points_w',S.points);localStorage.setItem('ukiw_tier_w',S.tier);localStorage.setItem('ukiw_tx_w',JSON.stringify(S.tx.slice(0,60)));render();}};
+  const fmt=n=>'Rp '+(n||0).toLocaleString('id-ID'); const toast=(m,ms=1800)=>{const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',ms);};
+  document.querySelectorAll('aside .menu button,[data-nav]').forEach(b=>b.addEventListener('click',e=>nav(e.currentTarget.dataset.nav)));
+  function render(){document.getElementById('txtBal').textContent=fmt(S.balance);document.getElementById('pillBalance').textContent=fmt(S.balance);document.getElementById('tierText').textContent=S.tier;document.getElementById('pointsText').textContent=S.points;}
+  function renderList(){const wrap=document.getElementById('listActivity');wrap.innerHTML='';if(!S.tx.length){wrap.innerHTML='<div class="row"><div>No activity yet</div></div>';return;}S.tx.slice(0,14).forEach(t=>{const tag=t.status==='COMPLETED'?'ok':(t.status==='PENDING'?'pend':'err');const sign=t.type==='credit'?'+':'-';const row=document.createElement('div');row.className='row';row.innerHTML=`<div>${t.title}<div style="color:#aab1bf;font-size:12px">${new Date(t.ts).toLocaleString('id-ID')}</div></div><div style="display:flex;align-items:center;gap:8px"><span class="tag ${tag}">${t.status}</span><b style="min-width:120px;text-align:right">${sign} ${fmt(t.amount)}</b></div>`;wrap.appendChild(row);});}
+  // Top-up presets
+  const tuPresets=[50000,100000,200000,300000,500000,1000000];const tuDen=document.getElementById('tuDenoms');tuDen.innerHTML=tuPresets.map(v=>`<button data-val="${v}">${fmt(v)}</button>`).join('');tuDen.querySelectorAll('button').forEach(b=>b.onclick=()=>{document.getElementById('tuAmount').value=b.dataset.val;});
+  // Purchases denoms
+  const pulsa=[10000,20000,25000,50000,100000];const data=[{'2 GB':20000},{'5 GB':50000},{'10 GB':90000},{'20 GB':160000}];const game=[{'ML 86 Diamonds':25000},{'FF 310 Diamonds':50000},{'PUBG 60 UC':15000},{'PUBG 300 UC':70000}];
+  function fillDenoms(list,wrap){wrap.innerHTML=list.map(x=>{const k=typeof x==='number'?x:Object.keys(x)[0];const v=typeof x==='number'?x:x[k];return `<button data-val="${v}" data-name="${k}">${k} • ${fmt(v)}</button>`}).join('');wrap.querySelectorAll('button').forEach(b=>b.onclick=()=>{wrap.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');wrap.dataset.sel=b.dataset.val;wrap.dataset.name=b.dataset.name||('Rp '+b.dataset.val);});}
+  fillDenoms(pulsa,document.getElementById('pulsaDenoms'));fillDenoms(data,document.getElementById('dataDenoms'));fillDenoms(game,document.getElementById('gameDenoms'));
+  document.querySelectorAll('#view-buy [data-tab]').forEach(btn=>btn.onclick=()=>{const tab=btn.dataset.tab;document.querySelectorAll('.buytab').forEach(t=>t.classList.add('hidden'));document.getElementById('tab-'+tab).classList.remove('hidden');});
+  // Quick top up
+  document.getElementById('btnTopUpQuick').onclick=()=>{const id='TQ'+Date.now();const amt=100000;S.tx.unshift({id,ts:Date.now(),title:'Top-up (Quick)',amount:amt,type:'credit',status:'PENDING'});S.save();toast('Top-up created (pending)');setTimeout(()=>{const ok=Math.random()>0.15;const t=S.tx.find(x=>x.id===id);if(!t)return;if(ok){t.status='COMPLETED';S.balance+=amt;toast('Top-up successful');}else{t.status='FAILED';toast('Top-up failed');}S.save();nav('dashboard');},1400);};
+  // Top-up full
+  document.getElementById('btnTopup').onclick=()=>{const m=document.getElementById('tuMethod').value;const amt=+document.getElementById('tuAmount').value||0;if(amt<=0)return toast('Enter amount');const id='TU'+Date.now();const title={'va':'Top-up Bank VA','card':'Top-up Card','wallet':'Top-up Other Wallet','agent':'Top-up Agent'}[m];S.tx.unshift({id,ts:Date.now(),title,amount:amt,type:'credit',status:'PENDING'});S.save();if(m==='va')toast('VA generated. Await bank...');if(m==='agent')toast('Show barcode at agent (TTL 30m)');if(m==='card')toast('3DS challenge success (sim)');setTimeout(()=>{const ok=Math.random()>0.12;const t=S.tx.find(x=>x.id===id);if(!t)return;if(ok){t.status='COMPLETED';S.balance+=amt;toast('Top-up completed');}else{t.status='FAILED';toast('Top-up failed');}S.save();nav('dashboard');},1500);};
+  // Transfer
+  document.getElementById('w_send').onclick=()=>{const to=document.getElementById('w_to').value;const amt=+document.getElementById('w_amount').value||0;if(!to||amt<=0)return toast('Fill all fields');if(amt>S.balance)return toast('Insufficient balance');const id='TR'+Date.now();S.tx.unshift({id,ts:Date.now(),title:`Transfer to ${to}`,amount:amt,type:'debit',status:'PENDING'});S.balance-=amt;S.save();toast('Transfer processing...');setTimeout(()=>{const ok=Math.random()>0.08;const t=S.tx.find(x=>x.id===id);if(!t)return;if(ok){t.status='COMPLETED';toast('Transfer successful');}else{t.status='FAILED';S.balance+=amt;toast('Transfer failed, refunded');}S.save();nav('dashboard');},1200);};
+  
+  // Cash-out
+  document.getElementById('w_cashout').onclick=()=>{const agent=document.getElementById('w_agent').value;const amt=+document.getElementById('w_co_amount').value||0;if(!agent||amt<=0)return toast('Fill all fields');if(amt>S.balance)return toast('Insufficient balance');const id='CO'+Date.now();S.tx.unshift({id,ts:Date.now(),title:`Cash-out at ${agent}`,amount:amt,type:'debit',status:'PENDING'});S.balance-=amt;S.save();toast('Cash-out code generated');setTimeout(()=>{const ok=Math.random()>0.1;const t=S.tx.find(x=>x.id===id);if(!t)return;if(ok){t.status='COMPLETED';toast('Cash-out completed');}else{t.status='FAILED';S.balance+=amt;toast('Cash-out failed, refunded');}S.save();nav('dashboard');},1800);};
+  
+  // Bill payments
+  document.getElementById('w_pay_bill').onclick=()=>{const type=document.getElementById('billType').value;const id=document.getElementById('billId').value;const amt=+document.getElementById('billAmount').value||0;if(!id||amt<=0)return toast('Fill all fields');if(amt>S.balance)return toast('Insufficient balance');const txId='BP'+Date.now();S.tx.unshift({id:txId,ts:Date.now(),title:`${type} - ${id}`,amount:amt,type:'debit',status:'PENDING'});S.balance-=amt;S.save();toast('Payment processing...');setTimeout(()=>{const ok=Math.random()>0.05;const t=S.tx.find(x=>x.id===txId);if(!t)return;if(ok){t.status='COMPLETED';toast('Payment successful');}else{t.status='FAILED';S.balance+=amt;toast('Payment failed, refunded');}S.save();nav('dashboard');},1600);};
+  
+  // Purchases
+  function buyProduct(type,denoms){const sel=denoms.dataset.sel;const name=denoms.dataset.name;if(!sel)return toast('Select product');const amt=+sel;if(amt>S.balance)return toast('Insufficient balance');const id='PU'+Date.now();S.tx.unshift({id,ts:Date.now(),title:`${type} - ${name}`,amount:amt,type:'debit',status:'PENDING'});S.balance-=amt;S.save();toast('Purchase processing...');setTimeout(()=>{const ok=Math.random()>0.03;const t=S.tx.find(x=>x.id===id);if(!t)return;if(ok){t.status='COMPLETED';toast('Purchase successful');}else{t.status='FAILED';S.balance+=amt;toast('Purchase failed, refunded');}S.save();nav('dashboard');},1400);}
+  
+  document.getElementById('w_buy_pulsa').onclick=()=>buyProduct('Pulsa',document.getElementById('pulsaDenoms'));
+  document.getElementById('w_buy_data').onclick=()=>buyProduct('Data',document.getElementById('dataDenoms'));
+  document.getElementById('w_buy_game').onclick=()=>buyProduct('Game',document.getElementById('gameDenoms'));
+  
+  // QR Payment
+  document.getElementById('w_qr_pay').onclick=()=>{const amt=+document.getElementById('qrAmount').value||0;if(amt<=0)return toast('Enter amount');if(amt>S.balance)return toast('Insufficient balance');const id='QR'+Date.now();S.tx.unshift({id,ts:Date.now(),title:'QR Payment',amount:amt,type:'debit',status:'PENDING'});S.balance-=amt;S.save();toast('QR payment processing...');setTimeout(()=>{const ok=Math.random()>0.02;const t=S.tx.find(x=>x.id===id);if(!t)return;if(ok){t.status='COMPLETED';toast('QR payment successful');}else{t.status='FAILED';S.balance+=amt;toast('QR payment failed, refunded');}S.save();nav('dashboard');},1000);};
+  
+  // Cards
+  document.getElementById('w_add_card').onclick=()=>toast('Card linking feature coming soon');
+  document.getElementById('w_card_charge').onclick=()=>{const amt=50000;const id='CC'+Date.now();S.tx.unshift({id,ts:Date.now(),title:'Card Charge',amount:amt,type:'credit',status:'PENDING'});S.save();toast('Card charge processing...');setTimeout(()=>{const ok=Math.random()>0.1;const t=S.tx.find(x=>x.id===id);if(!t)return;if(ok){t.status='COMPLETED';S.balance+=amt;toast('Card charge successful');}else{t.status='FAILED';toast('Card charge failed');}S.save();nav('dashboard');},1300);};
+  
+  // Settings
+  document.getElementById('w_upgrade').onclick=()=>{if(S.tier==='PLUS')return toast('Already PLUS tier');S.tier='PLUS';S.points+=1000;S.save();toast('Upgraded to PLUS tier!');};
+  document.getElementById('w_reset').onclick=()=>{if(confirm('Reset all demo data?')){localStorage.clear();location.reload();}};
+  
+  // Initialize
+  render();
+  nav('dashboard');
+</script>
+
+<!-- Scripts -->
+<script src="../assets/js/theme-manager.js"></script>
+<script src="../assets/js/qr-manager.js"></script>
+<script src="../assets/js/dashboard-manager.js"></script>
+<script>
+  // Initialize theme manager for web
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize theme manager
+    window.themeManager = new ThemeManager();
+    
+    // Add theme toggle to header actions
+    const headerActions = document.querySelector('.header-actions');
+    if (headerActions) {
+      const themeToggle = document.createElement('button');
+      themeToggle.className = 'theme-toggle btn';
+      themeToggle.innerHTML = '<span class="theme-icon">🌙</span>';
+      themeToggle.title = 'Toggle Dark/Light Mode';
+      headerActions.insertBefore(themeToggle, headerActions.firstChild);
+      
+      // Connect theme toggle
+      themeToggle.addEventListener('click', () => {
+        window.themeManager.toggleTheme();
+      });
+    }
+    
+    // Initialize other managers
+    if (typeof NotificationManager !== 'undefined') {
+      window.notificationManager = new NotificationManager();
+    }
+    
+    if (typeof LoadingManager !== 'undefined') {
+      window.loadingManager = new LoadingManager();
+    }
+    
+    // Initialize dashboard manager for analytics
+    if (typeof DashboardManager !== 'undefined') {
+      window.dashboardManager = new DashboardManager();
+    }
+    
+    // Initialize QR manager for web
+    if (typeof QRManager !== 'undefined') {
+      window.qrManager = new QRManager();
+    }
+  });
+  
+  // Enhanced navigation function with analytics support
+  function nav(to) {
+    document.querySelectorAll('aside .menu button').forEach(b=>b.classList.toggle('active',b.dataset.nav===to));
+    document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));
+    document.getElementById('view-'+to).classList.remove('hidden');
+    
+    if(to==='dashboard') {
+      renderList();
+    } else if(to==='analytics' && window.dashboardManager) {
+      window.dashboardManager.updateDashboard();
+    }
+  }
+</script>
+</body>
+</html>

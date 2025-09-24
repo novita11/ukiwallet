@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>UKI-Wallet Mobile - Dompet Digital Indonesia</title>
+  <meta name="description" content="UKI-Wallet Mobile - Aplikasi dompet digital dengan tema emas yang elegan"/>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="../assets/css/colors.css">
+  <link rel="stylesheet" href="../assets/css/typography.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/mobile-nav.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+  
+  <style>
+    /* Mobile Specific Styles */
+    body {
+      background: var(--bg-primary);
+      padding-bottom: 80px; /* Space for bottom nav */
+    }
+
+    .app {
+      max-width: 100%;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-primary);
+      padding: 16px 20px;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      min-height: 60px;
+      transition: all 0.3s ease;
+    }
+
+    /* Light theme header adjustments */
+    .light-theme .header {
+      background: rgba(248, 249, 250, 0.95);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .header__actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--primary-gold);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: var(--font-bold);
+      color: var(--text-dark);
+    }
+
+    .logo-text {
+      font-size: var(--font-lg);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+    }
+
+    .tier-badge {
+      background: var(--primary-gold);
+      color: var(--text-dark);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: var(--font-xs);
+      font-weight: var(--font-semibold);
+    }
+
+    .main-content {
+      padding: 0 20px 20px;
+    }
+
+    /* Page Transitions */
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- Header -->
+    <header class="header animate-slideInDown" id="header">
+      <div class="logo">
+        <div class="logo-icon">UW</div>
+        <span class="logo-text">UKI-Wallet</span>
+      </div>
+      <div class="header__actions">
+        <!-- Tier Badge -->
+        <div class="header-item tier-badge-clean" id="tierBadge" style="background: #FFD700; color: #000; padding: 0 10px; font-size: 10px; font-weight: 600; min-width: 50px;">
+          BASIC
+        </div>
+        
+        <!-- Notification -->
+        <button class="header-item notification-clean" id="notification-btn" style="background: var(--bg-card); color: var(--text-primary); width: 32px; position: relative; border: 1px solid var(--border-secondary);">
+          🔔
+          <span style="position: absolute; top: -2px; right: -2px; background: #ff4444; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 8px; display: flex; align-items: center; justify-content: center;">3</span>
+        </button>
+        
+        <!-- Theme Toggle -->
+        <button class="header-item theme-toggle-clean" id="theme-toggle" style="background: var(--bg-card); color: var(--text-primary); width: 32px; border: 1px solid var(--border-secondary);">
+          🌙
+        </button>
+        
+        <!-- User Avatar -->
+        <div class="header-item user-avatar-clean" style="background: #FFD700; color: #000; width: 32px; font-weight: bold; font-size: 12px;">
+          U
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main">
+      <!-- Home Page -->
+      <section class="page page--active animate-fadeIn" id="page-home">
+        <!-- Welcome Header -->
+        <div class="welcome-header animate-slideInDown">
+          <div class="welcome-greeting">
+            <h1 class="welcome-title">Kelola Keuangan Digital Anda</h1>
+            <p class="welcome-subtitle">Platform pembayaran digital yang aman dan mudah digunakan</p>
+            <div class="welcome-features">
+              <span class="feature-tag">💳 Pembayaran</span>
+              <span class="feature-tag">💰 Transfer</span>
+              <span class="feature-tag">📱 QR Code</span>
+              <span class="feature-tag">📊 Analitik</span>
+            </div>
+          </div>
+          <div class="welcome-avatar">
+            <div class="avatar-circle">
+              <span class="avatar-initial">U</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Balance Card -->
+        <div class="balance-card-modern card--animated animate-slideInUp">
+          <div class="balance-gradient-bg"></div>
+          <div class="balance-card-content">
+            <div class="balance-card__header">
+              <div class="balance-info">
+                <h2 class="balance-card__title">💳 Saldo Utama</h2>
+                <div class="tier-badge">
+                  <span class="tier-icon">⭐</span>
+                  <span class="tier-text">TIER BASIC</span>
+                </div>
+              </div>
+              <button class="balance-card__toggle modern-toggle" id="balance-toggle">
+                <span class="toggle-icon">👁️</span>
+              </button>
+            </div>
+            <div class="balance-card__amount" id="balance-amount">
+              <span class="currency">Rp</span>
+              <span class="amount" id="balanceText">2,500,000</span>
+            </div>
+            <div class="balance-card__footer">
+              <div class="balance-card__points">
+                <span class="points-icon">🎯</span>
+                <span class="points-label">UKI Points:</span>
+                <span class="points-value" id="pointsText">1,250</span>
+              </div>
+              <div class="balance-growth">
+                <span class="growth-icon">📈</span>
+                <span class="growth-text">+2.5% bulan ini</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Quick Actions - Gojek Style -->
+        <div class="actions-section stagger-item">
+          <h3 class="section-title-modern">⚡ Aksi Cepat</h3>
+          <div class="actions-grid-gojek">
+            <!-- Row 1 -->
+            <button class="action-btn-gojek btn--animated" data-action="topup">
+              <div class="action-btn__icon-gojek">
+                <div class="icon-bg icon-bg--topup"></div>
+                <span class="icon-symbol">💳</span>
+              </div>
+              <span class="action-btn__text">Top Up</span>
+            </button>
+            <button class="action-btn-gojek btn--animated" data-action="transfer">
+              <div class="action-btn__icon-gojek">
+                <div class="icon-bg icon-bg--transfer"></div>
+                <span class="icon-symbol">💸</span>
+              </div>
+              <span class="action-btn__text">Transfer</span>
+            </button>
+            <button class="action-btn-gojek btn--animated" data-action="qr">
+              <div class="action-btn__icon-gojek">
+                <div class="icon-bg icon-bg--qr"></div>
+                <span class="icon-symbol">📱</span>
+              </div>
+              <span class="action-btn__text">QR Pay</span>
+            </button>
+            <button class="action-btn-gojek btn--animated" data-action="shopping">
+              <div class="action-btn__icon-gojek">
+                <div class="icon-bg icon-bg--shopping"></div>
+                <span class="icon-symbol">🛒</span>
+              </div>
+              <span class="action-btn__text">Belanja</span>
+            </button>
+            
+            <!-- Row 2 -->
+            <button class="action-btn-gojek btn--animated" data-action="pulsa">
+              <div class="action-btn__icon-gojek">
+                <div class="icon-bg icon-bg--pulsa"></div>
+                <span class="icon-symbol">📞</span>
+              </div>
+              <span class="action-btn__text">Pulsa</span>
+            </button>
+            <button class="action-btn-gojek btn--animated" data-action="pln">
+              <div class="action-btn__icon-gojek">
+                <div class="icon-bg icon-bg--pln"></div>
+                <span class="icon-symbol">⚡</span>
+              </div>
+              <span class="action-btn__text">PLN</span>
+            </button>
+            <button class="action-btn-gojek btn--animated" data-action="internet">
+              <div class="action-btn__icon-gojek">
+                <div class="icon-bg icon-bg--internet"></div>
+                <span class="icon-symbol">📶</span>
+              </div>
+              <span class="action-btn__text">Internet</span>
+            </button>
+            <button class="action-btn-gojek btn--animated" data-action="more">
+              <div class="action-btn__icon-gojek">
+                <div class="icon-bg icon-bg--more"></div>
+                <span class="icon-symbol">⋯</span>
+              </div>
+              <span class="action-btn__text">Lainnya</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Enhanced Financial Services -->
+        <div class="services-section-modern stagger-item">
+          <div class="section-header-modern">
+            <h3 class="section-title-modern">🏦 Layanan Keuangan</h3>
+            <button class="section-link-modern">Lihat Semua →</button>
+          </div>
+          <div class="services-carousel">
+            <div class="service-card-modern card--animated">
+              <div class="service-card__header">
+                <div class="service-card__icon-modern">💰</div>
+                <div class="service-card__badge">Populer</div>
+              </div>
+              <div class="service-card__content">
+                <h4 class="service-card__title">Investasi Emas</h4>
+                <p class="service-card__desc">Mulai dari Rp10.000</p>
+                <div class="service-card__stats">
+                  <span class="stat-item">📈 +12.5% p.a</span>
+                </div>
+              </div>
+            </div>
+            <div class="service-card-modern card--animated">
+              <div class="service-card__header">
+                <div class="service-card__icon-modern">🏦</div>
+                <div class="service-card__badge">Terbaru</div>
+              </div>
+              <div class="service-card__content">
+                <h4 class="service-card__title">Tabungan Berjangka</h4>
+                <p class="service-card__desc">Bunga hingga 6% p.a</p>
+                <div class="service-card__stats">
+                  <span class="stat-item">🎯 Bebas biaya admin</span>
+                </div>
+              </div>
+            </div>
+            <div class="service-card-modern card--animated">
+              <div class="service-card__header">
+                <div class="service-card__icon-modern">🛡️</div>
+                <div class="service-card__badge">Promo</div>
+              </div>
+              <div class="service-card__content">
+                <h4 class="service-card__title">Asuransi Jiwa</h4>
+                <p class="service-card__desc">Perlindungan keluarga</p>
+                <div class="service-card__stats">
+                  <span class="stat-item">💎 Diskon 50%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Recent Transactions -->
+        <div class="transactions-section-modern stagger-item">
+          <div class="section-header-modern">
+            <h3 class="section-title-modern">📋 Transaksi Terbaru</h3>
+            <button class="section-link-modern">Lihat Semua →</button>
+          </div>
+          <div class="transaction-list-modern" id="recent-transactions">
+            <!-- Sample transactions for better visual -->
+            <div class="transaction-item-modern">
+              <div class="transaction-icon transaction-icon--income">📈</div>
+              <div class="transaction-details">
+                <h4 class="transaction-title">Top Up Saldo</h4>
+                <p class="transaction-desc">Via Bank BCA • 14:30</p>
+              </div>
+              <div class="transaction-amount transaction-amount--income">+Rp 500,000</div>
+            </div>
+            <div class="transaction-item-modern">
+              <div class="transaction-icon transaction-icon--expense">🛒</div>
+              <div class="transaction-details">
+                <h4 class="transaction-title">Belanja Online</h4>
+                <p class="transaction-desc">Tokopedia • 12:15</p>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 125,000</div>
+            </div>
+            <div class="transaction-item-modern">
+              <div class="transaction-icon transaction-icon--transfer">💸</div>
+              <div class="transaction-details">
+                <h4 class="transaction-title">Transfer ke Budi</h4>
+                <p class="transaction-desc">Via UKI-Wallet • 10:45</p>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 50,000</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Promotional Banner -->
+        <div class="promo-banner stagger-item animate-pulse">
+          <div class="promo-content">
+            <div class="promo-icon">🎉</div>
+            <div class="promo-text">
+              <h4 class="promo-title">Cashback 20%!</h4>
+              <p class="promo-desc">Untuk transaksi pertama hari ini</p>
+            </div>
+            <button class="promo-btn">Klaim</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS PAGE -->
+      <section class="page" id="page-analytics">
+        <div class="page-header">
+          <h2 class="page-title">📊 Analytics</h2>
+          <div class="period-selector">
+            <button class="period-btn" data-period="weekly">Minggu</button>
+            <button class="period-btn period-btn--active" data-period="monthly">Bulan</button>
+            <button class="period-btn" data-period="yearly">Tahun</button>
+          </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="analytics-summary">
+          <div class="summary-card card--animated">
+            <div class="summary-icon">💰</div>
+            <div class="summary-content">
+              <div class="summary-label">Total Pemasukan</div>
+              <div class="summary-value text-success" id="analytics-income">Rp 8.750.000</div>
+              <div class="summary-change positive">+15.2%</div>
+            </div>
+          </div>
+          
+          <div class="summary-card card--animated">
+            <div class="summary-icon">💸</div>
+            <div class="summary-content">
+              <div class="summary-label">Total Pengeluaran</div>
+              <div class="summary-value text-danger" id="analytics-expense">Rp 5.250.000</div>
+              <div class="summary-change negative">-8.5%</div>
+            </div>
+          </div>
+          
+          <div class="summary-card card--animated">
+            <div class="summary-icon">📈</div>
+            <div class="summary-content">
+              <div class="summary-label">Saldo Bersih</div>
+              <div class="summary-value" id="analytics-net">Rp 3.500.000</div>
+              <div class="summary-change positive">+6.7%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="card analytics-card">
+          <div class="card-header">
+            <h3 class="card-title">Pengeluaran per Kategori</h3>
+            <button class="chart-toggle">📊</button>
+          </div>
+          <div class="category-chart">
+            <div class="category-item">
+              <div class="category-info">
+                <div class="category-icon">🍔</div>
+                <div class="category-details">
+                  <span class="category-name">Makanan & Minuman</span>
+                  <span class="category-amount">Rp 1.850.000</span>
+                </div>
+              </div>
+              <div class="category-bar">
+                <div class="category-progress"></div>
+              </div>
+              <span class="category-percentage">35.2%</span>
+            </div>
+            
+            <div class="category-item">
+              <div class="category-info">
+                <div class="category-icon">🚗</div>
+                <div class="category-details">
+                  <span class="category-name">Transportasi</span>
+                  <span class="category-amount">Rp 1.200.000</span>
+                </div>
+              </div>
+              <div class="category-bar">
+                <div class="category-progress"></div>
+              </div>
+              <span class="category-percentage">22.9%</span>
+            </div>
+            
+            <div class="category-item">
+              <div class="category-info">
+                <div class="category-icon">🛒</div>
+                <div class="category-details">
+                  <span class="category-name">Belanja</span>
+                  <span class="category-amount">Rp 950.000</span>
+                </div>
+              </div>
+              <div class="category-bar">
+                <div class="category-progress"></div>
+              </div>
+              <span class="category-percentage">18.1%</span>
+            </div>
+            
+            <div class="category-item">
+              <div class="category-info">
+                <div class="category-icon">🎬</div>
+                <div class="category-details">
+                  <span class="category-name">Hiburan</span>
+                  <span class="category-amount">Rp 750.000</span>
+                </div>
+              </div>
+              <div class="category-bar">
+                <div class="category-progress"></div>
+              </div>
+              <span class="category-percentage">14.3%</span>
+            </div>
+            
+            <div class="category-item">
+              <div class="category-info">
+                <div class="category-icon">⚡</div>
+                <div class="category-details">
+                  <span class="category-name">Tagihan</span>
+                  <span class="category-amount">Rp 500.000</span>
+                </div>
+              </div>
+              <div class="category-bar">
+                <div class="category-progress"></div>
+              </div>
+              <span class="category-percentage">9.5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Trends -->
+        <div class="card analytics-card">
+          <div class="card-header">
+            <h3 class="card-title">Tren Bulanan</h3>
+            <button class="chart-toggle">📈</button>
+          </div>
+          <div class="trends-chart">
+            <div class="chart-bars">
+              <div class="chart-bar">
+                <div class="bar-fill income" style="height: 60%"></div>
+                <div class="bar-fill expense" style="height: 40%"></div>
+                <span class="bar-label">Jan</span>
+              </div>
+              <div class="chart-bar">
+                <div class="bar-fill income" style="height: 75%"></div>
+                <div class="bar-fill expense" style="height: 55%"></div>
+                <span class="bar-label">Feb</span>
+              </div>
+              <div class="chart-bar">
+                <div class="bar-fill income" style="height: 85%"></div>
+                <div class="bar-fill expense" style="height: 65%"></div>
+                <span class="bar-label">Mar</span>
+              </div>
+              <div class="chart-bar">
+                <div class="bar-fill income" style="height: 70%"></div>
+                <div class="bar-fill expense" style="height: 50%"></div>
+                <span class="bar-label">Apr</span>
+              </div>
+              <div class="chart-bar">
+                <div class="bar-fill income" style="height: 90%"></div>
+                <div class="bar-fill expense" style="height: 70%"></div>
+                <span class="bar-label">Mei</span>
+              </div>
+              <div class="chart-bar">
+                <div class="bar-fill income" style="height: 95%"></div>
+                <div class="bar-fill expense" style="height: 75%"></div>
+                <span class="bar-label">Jun</span>
+              </div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-color income"></div>
+                <span>Pemasukan</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color expense"></div>
+                <span>Pengeluaran</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+              <div class="stat-value">247</div>
+              <div class="stat-label">Total Transaksi</div>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">💳</div>
+            <div class="stat-content">
+              <div class="stat-value">Rp 21.255</div>
+              <div class="stat-label">Rata-rata Transaksi</div>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-content">
+              <div class="stat-value">Makanan</div>
+              <div class="stat-label">Kategori Terfavorit</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Savings Goal -->
+        <div class="card analytics-card">
+          <div class="card-header">
+            <h3 class="card-title">Target Tabungan Bulan Ini</h3>
+            <button class="chart-toggle">🎯</button>
+          </div>
+          <div class="savings-goal">
+            <div class="goal-progress">
+              <div class="goal-bar">
+                <div class="goal-fill"></div>
+              </div>
+              <div class="goal-info">
+                <span class="goal-current">Rp 4.750.000</span>
+                <span class="goal-target">/ Rp 10.000.000</span>
+              </div>
+            </div>
+            <div class="goal-stats">
+              <div class="goal-stat">
+                <span class="goal-stat-label">Tercapai</span>
+                <span class="goal-stat-value">47.5%</span>
+              </div>
+              <div class="goal-stat">
+                <span class="goal-stat-label">Sisa</span>
+                <span class="goal-stat-value">Rp 5.250.000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HISTORY PAGE -->
+      <section class="page animate-slideInRight" id="page-history">
+        <div class="page-header">
+          <h2 class="page-title">Riwayat Transaksi</h2>
+          <div class="history-controls">
+            <div class="filter-tabs">
+              <button class="filter-tab filter-tab--active" data-filter="all">Semua</button>
+              <button class="filter-tab" data-filter="income">Masuk</button>
+              <button class="filter-tab" data-filter="expense">Keluar</button>
+            </div>
+            <div class="date-filter">
+              <select class="date-select" id="month-filter">
+                <option value="all">Semua Bulan</option>
+                <option value="12">Desember 2024</option>
+                <option value="11">November 2024</option>
+                <option value="10">Oktober 2024</option>
+                <option value="9">September 2024</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="transaction-summary card--animated">
+          <div class="summary-grid">
+            <div class="summary-item summary-item--income">
+              <div class="summary-icon">📈</div>
+              <div class="summary-content">
+                <span class="summary-label">Total Masuk</span>
+                <span class="summary-value text-success">+Rp 8.750.000</span>
+              </div>
+            </div>
+            <div class="summary-item summary-item--expense">
+              <div class="summary-icon">📉</div>
+              <div class="summary-content">
+                <span class="summary-label">Total Keluar</span>
+                <span class="summary-value text-danger">-Rp 5.250.000</span>
+              </div>
+            </div>
+            <div class="summary-item summary-item--net">
+              <div class="summary-icon">💰</div>
+              <div class="summary-content">
+                <span class="summary-label">Saldo Bersih</span>
+                <span class="summary-value text-primary">+Rp 3.500.000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-bar">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Cari transaksi..." id="transaction-search">
+          </div>
+        </div>
+
+        <div class="transaction-list" id="transaction-history">
+          <!-- Today -->
+          <div class="transaction-group">
+            <div class="transaction-date-header">
+              <span class="date-text">Hari Ini</span>
+              <span class="date-amount">-Rp 285.000</span>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="food">
+              <div class="transaction-icon transaction-icon--food">🍔</div>
+              <div class="transaction-details">
+                <div class="transaction-title">McDonald's Senayan</div>
+                <div class="transaction-subtitle">Makanan & Minuman • 14:30</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 85.000</div>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="transport">
+              <div class="transaction-icon transaction-icon--transport">🚗</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Grab Car</div>
+                <div class="transaction-subtitle">Transportasi • 12:15</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 45.000</div>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="shopping">
+              <div class="transaction-icon transaction-icon--shopping">🛒</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Indomaret</div>
+                <div class="transaction-subtitle">Belanja • 09:45</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 155.000</div>
+            </div>
+          </div>
+
+          <!-- Yesterday -->
+          <div class="transaction-group">
+            <div class="transaction-date-header">
+              <span class="date-text">Kemarin</span>
+              <span class="date-amount">+Rp 2.150.000</span>
+            </div>
+            
+            <div class="transaction-item" data-type="income" data-category="salary">
+              <div class="transaction-icon transaction-icon--salary">💼</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Gaji Bulanan</div>
+                <div class="transaction-subtitle">Pemasukan • 08:00</div>
+              </div>
+              <div class="transaction-amount transaction-amount--income">+Rp 2.500.000</div>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="bills">
+              <div class="transaction-icon transaction-icon--bills">⚡</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Listrik PLN</div>
+                <div class="transaction-subtitle">Tagihan • 16:20</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 350.000</div>
+            </div>
+          </div>
+
+          <!-- 2 Days Ago -->
+          <div class="transaction-group">
+            <div class="transaction-date-header">
+              <span class="date-text">2 Hari Lalu</span>
+              <span class="date-amount">-Rp 425.000</span>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="entertainment">
+              <div class="transaction-icon transaction-icon--entertainment">🎬</div>
+              <div class="transaction-details">
+                <div class="transaction-title">CGV Cinemas</div>
+                <div class="transaction-subtitle">Hiburan • 19:30</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 125.000</div>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="food">
+              <div class="transaction-icon transaction-icon--food">☕</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Starbucks</div>
+                <div class="transaction-subtitle">Makanan & Minuman • 15:45</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 75.000</div>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="shopping">
+              <div class="transaction-icon transaction-icon--shopping">👕</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Uniqlo</div>
+                <div class="transaction-subtitle">Belanja • 13:20</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 225.000</div>
+            </div>
+          </div>
+
+          <!-- 3 Days Ago -->
+          <div class="transaction-group">
+            <div class="transaction-date-header">
+              <span class="date-text">3 Hari Lalu</span>
+              <span class="date-amount">+Rp 850.000</span>
+            </div>
+            
+            <div class="transaction-item" data-type="income" data-category="freelance">
+              <div class="transaction-icon transaction-icon--freelance">💻</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Freelance Project</div>
+                <div class="transaction-subtitle">Pemasukan • 10:30</div>
+              </div>
+              <div class="transaction-amount transaction-amount--income">+Rp 1.200.000</div>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="food">
+              <div class="transaction-icon transaction-icon--food">🍕</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Pizza Hut</div>
+                <div class="transaction-subtitle">Makanan & Minuman • 20:15</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 185.000</div>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="transport">
+              <div class="transaction-icon transaction-icon--transport">🏍️</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Gojek</div>
+                <div class="transaction-subtitle">Transportasi • 18:45</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 25.000</div>
+            </div>
+            
+            <div class="transaction-item" data-type="expense" data-category="health">
+              <div class="transaction-icon transaction-icon--health">💊</div>
+              <div class="transaction-details">
+                <div class="transaction-title">Apotek Kimia Farma</div>
+                <div class="transaction-subtitle">Kesehatan • 14:00</div>
+              </div>
+              <div class="transaction-amount transaction-amount--expense">-Rp 140.000</div>
+            </div>
+          </div>
+
+          <!-- Load More Button -->
+          <div class="load-more-container">
+            <button class="btn btn--secondary load-more-btn" id="load-more-transactions">
+              <span class="btn-icon">📄</span>
+              Muat Lebih Banyak
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- NOTIFICATIONS PAGE -->
+      <section class="page" id="page-notifications">
+        <div class="card">
+          <div class="section-title">🔔 Notifikasi</div>
+          <p class="text-secondary">Halaman notifikasi akan segera hadir...</p>
+        </div>
+      </section>
+
+      <!-- QR Page -->
+      <section class="page animate-slideInUp" id="page-qr">
+        <div class="page-header">
+          <h2 class="page-title">QR Code</h2>
+          <div class="qr-tabs">
+            <button class="qr-tab qr-tab--active" data-tab="scan">Scan</button>
+            <button class="qr-tab" data-tab="generate">Generate</button>
+          </div>
+        </div>
+
+        <!-- QR Scanner Tab -->
+        <div class="qr-content qr-content--active" id="qr-scan">
+          <div class="qr-scanner card--animated">
+            <div class="scanner-frame">
+              <div class="scanner-overlay">
+                <div class="scanner-corners">
+                  <div class="corner corner--tl"></div>
+                  <div class="corner corner--tr"></div>
+                  <div class="corner corner--bl"></div>
+                  <div class="corner corner--br"></div>
+                </div>
+                <div class="scanner-line animate-scan"></div>
+              </div>
+              <video id="qr-video" autoplay playsinline></video>
+            </div>
+            <p class="scanner-instruction">Arahkan kamera ke QR code</p>
+            <button class="btn btn--secondary" id="toggle-flash">
+              <span class="btn-icon">🔦</span>
+              Flash
+            </button>
+          </div>
+        </div>
+
+        <!-- QR Generator Tab -->
+        <div class="qr-content" id="qr-generate">
+          <div class="qr-generator card--animated">
+            <div class="qr-display" id="qr-display">
+              <canvas id="qr-canvas"></canvas>
+            </div>
+            <div class="qr-info">
+              <h3>QR Code Pembayaran</h3>
+              <p class="qr-amount">Rp 0</p>
+              <p class="qr-description">Scan untuk membayar</p>
+            </div>
+            <div class="qr-actions">
+              <button class="btn btn--primary" id="generate-qr">Generate QR</button>
+              <button class="btn btn--secondary" id="share-qr">Share</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Profile Page -->
+      <section class="page animate-slideInLeft" id="page-profile">
+        <div class="profile-header card--animated">
+          <div class="profile-avatar">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiNGRkQ3MDAiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDEyQzE0LjIwOTEgMTIgMTYgMTAuMjA5MSAxNiA4QzE2IDUuNzkwODYgMTQuMjA5MSA0IDEyIDRDOS43OTA4NiA0IDggNS43OTA4NiA4IDhDOCAxMC4yMDkxIDkuNzkwODYgMTIgMTIgMTJaIiBmaWxsPSIjMDAwMDAwIi8+CjxwYXRoIGQ9Ik0xMiAxNEM5LjMzIDEzLjk5IDcgMTYuMzYgNyAxOVYyMEgxN1YxOUMxNyAxNi4zNiAxNC42NyAxMy45OSAxMiAxNFoiIGZpbGw9IiMwMDAwMDAiLz4KPC9zdmc+Cjwvc3ZnPgo8L3N2Zz4K" alt="Profile" id="profile-avatar">
+            <button class="avatar-edit" id="edit-avatar">📷</button>
+          </div>
+          <div class="profile-info">
+            <h2 class="profile-name" id="profile-name">John Doe</h2>
+            <p class="profile-email" id="profile-email">john.doe@email.com</p>
+            <div class="profile-tier">
+              <span class="tier-badge tier-badge--gold">GOLD MEMBER</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-stats card--animated">
+          <div class="stat-item">
+            <div class="stat-value">156</div>
+            <div class="stat-label">Transaksi</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">1,250</div>
+            <div class="stat-label">UKI Points</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">4.8</div>
+            <div class="stat-label">Rating</div>
+          </div>
+        </div>
+
+        <div class="profile-menu">
+          <div class="menu-section">
+            <h3 class="menu-section-title">Akun</h3>
+            <div class="menu-items">
+              <button class="menu-item btn--animated" data-action="edit-profile">
+                <div class="menu-icon">👤</div>
+                <span class="menu-text">Edit Profile</span>
+                <div class="menu-arrow">›</div>
+              </button>
+              <button class="menu-item btn--animated" data-action="security">
+                <div class="menu-icon">🔒</div>
+                <span class="menu-text">Keamanan</span>
+                <div class="menu-arrow">›</div>
+              </button>
+              <button class="menu-item btn--animated" data-action="notifications">
+                <div class="menu-icon">🔔</div>
+                <span class="menu-text">Notifikasi</span>
+                <div class="menu-arrow">›</div>
+              </button>
+            </div>
+          </div>
+
+          <div class="menu-section">
+            <h3 class="menu-section-title">Preferensi</h3>
+            <div class="menu-items">
+              <button class="menu-item btn--animated" id="theme-toggle-menu">
+                <div class="menu-icon">🌙</div>
+                <span class="menu-text">Mode Gelap</span>
+                <div class="toggle-switch">
+                  <input type="checkbox" id="theme-checkbox">
+                  <label for="theme-checkbox" class="toggle-label"></label>
+                </div>
+              </button>
+              <button class="menu-item btn--animated" data-action="language">
+                <div class="menu-icon">🌐</div>
+                <span class="menu-text">Bahasa</span>
+                <div class="menu-arrow">›</div>
+              </button>
+            </div>
+          </div>
+
+          <div class="menu-section">
+            <h3 class="menu-section-title">Bantuan</h3>
+            <div class="menu-items">
+              <button class="menu-item btn--animated" data-action="help">
+                <div class="menu-icon">❓</div>
+                <span class="menu-text">Pusat Bantuan</span>
+                <div class="menu-arrow">›</div>
+              </button>
+              <button class="menu-item btn--animated" data-action="contact">
+                <div class="menu-icon">📞</div>
+                <span class="menu-text">Hubungi Kami</span>
+                <div class="menu-arrow">›</div>
+              </button>
+              <button class="menu-item btn--animated menu-item--danger" data-action="logout">
+                <div class="menu-icon">🚪</div>
+                <span class="menu-text">Keluar</span>
+                <div class="menu-arrow">›</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="mobile-nav">
+      <ul class="mobile-nav__list">
+        <li class="mobile-nav__item">
+          <a href="#" class="mobile-nav__link mobile-nav__link--active" data-nav="home">
+            <div class="mobile-nav__icon mobile-nav__icon--home"></div>
+            <span class="mobile-nav__text">Home</span>
+          </a>
+        </li>
+        <li class="mobile-nav__item">
+          <a href="#" class="mobile-nav__link" data-nav="analytics">
+            <div class="mobile-nav__icon mobile-nav__icon--analytics"></div>
+            <span class="mobile-nav__text">Analytics</span>
+          </a>
+        </li>
+        <li class="mobile-nav__item">
+          <a href="#" class="mobile-nav__link" data-nav="history">
+            <div class="mobile-nav__icon mobile-nav__icon--history"></div>
+            <span class="mobile-nav__text">History</span>
+          </a>
+        </li>
+        <li class="mobile-nav__item">
+          <a href="#" class="mobile-nav__link" data-nav="notifications">
+            <div class="mobile-nav__icon mobile-nav__icon--notifications"></div>
+            <span class="mobile-nav__text">Notifications</span>
+            <div class="mobile-nav__badge">3</div>
+          </a>
+        </li>
+        <li class="mobile-nav__item">
+          <a href="#" class="mobile-nav__link" data-nav="profile">
+            <div class="mobile-nav__icon mobile-nav__icon--profile"></div>
+            <span class="mobile-nav__text">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Modal Lainnya -->
+    <div class="modal-overlay" id="moreModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Semua Fitur</h3>
+          <button class="modal-close" id="closeMoreModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="features-grid">
+            <!-- Financial Services -->
+            <div class="feature-category">
+              <h4 class="category-title">💰 Layanan Keuangan</h4>
+              <div class="features-row">
+                <button class="feature-btn" data-action="tagihan">
+                  <div class="feature-icon">🧾</div>
+                  <span>Tagihan</span>
+                </button>
+                <button class="feature-btn" data-action="investasi">
+                  <div class="feature-icon">📈</div>
+                  <span>Investasi</span>
+                </button>
+                <button class="feature-btn" data-action="tabungan">
+                  <div class="feature-icon">🏦</div>
+                  <span>Tabungan</span>
+                </button>
+                <button class="feature-btn" data-action="asuransi">
+                  <div class="feature-icon">🛡️</div>
+                  <span>Asuransi</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- E-Commerce -->
+            <div class="feature-category">
+              <h4 class="category-title">🛍️ Belanja & Lifestyle</h4>
+              <div class="features-row">
+                <button class="feature-btn" data-action="marketplace">
+                  <div class="feature-icon">🏪</div>
+                  <span>Marketplace</span>
+                </button>
+                <button class="feature-btn" data-action="food">
+                  <div class="feature-icon">🍔</div>
+                  <span>Food</span>
+                </button>
+                <button class="feature-btn" data-action="fashion">
+                  <div class="feature-icon">👕</div>
+                  <span>Fashion</span>
+                </button>
+                <button class="feature-btn" data-action="voucher">
+                  <div class="feature-icon">🎫</div>
+                  <span>Voucher</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Transportation -->
+            <div class="feature-category">
+              <h4 class="category-title">🚗 Transportasi</h4>
+              <div class="features-row">
+                <button class="feature-btn" data-action="ojek">
+                  <div class="feature-icon">🏍️</div>
+                  <span>Ojek Online</span>
+                </button>
+                <button class="feature-btn" data-action="taxi">
+                  <div class="feature-icon">🚕</div>
+                  <span>Taxi</span>
+                </button>
+                <button class="feature-btn" data-action="bus">
+                  <div class="feature-icon">🚌</div>
+                  <span>Bus</span>
+                </button>
+                <button class="feature-btn" data-action="parking">
+                  <div class="feature-icon">🅿️</div>
+                  <span>Parkir</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Entertainment -->
+            <div class="feature-category">
+              <h4 class="category-title">🎮 Hiburan</h4>
+              <div class="features-row">
+                <button class="feature-btn" data-action="games">
+                  <div class="feature-icon">🎮</div>
+                  <span>Games</span>
+                </button>
+                <button class="feature-btn" data-action="streaming">
+                  <div class="feature-icon">📺</div>
+                  <span>Streaming</span>
+                </button>
+                <button class="feature-btn" data-action="music">
+                  <div class="feature-icon">🎵</div>
+                  <span>Musik</span>
+                </button>
+                <button class="feature-btn" data-action="events">
+                  <div class="feature-icon">🎪</div>
+                  <span>Events</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Health & Education -->
+            <div class="feature-category">
+              <h4 class="category-title">🏥 Kesehatan & Edukasi</h4>
+              <div class="features-row">
+                <button class="feature-btn" data-action="health">
+                  <div class="feature-icon">🏥</div>
+                  <span>Kesehatan</span>
+                </button>
+                <button class="feature-btn" data-action="pharmacy">
+                  <div class="feature-icon">💊</div>
+                  <span>Apotek</span>
+                </button>
+                <button class="feature-btn" data-action="education">
+                  <div class="feature-icon">📚</div>
+                  <span>Edukasi</span>
+                </button>
+                <button class="feature-btn" data-action="courses">
+                  <div class="feature-icon">🎓</div>
+                  <span>Kursus</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Utilities -->
+            <div class="feature-category">
+              <h4 class="category-title">🔧 Utilitas</h4>
+              <div class="features-row">
+                <button class="feature-btn" data-action="bpjs">
+                  <div class="feature-icon">🏥</div>
+                  <span>BPJS</span>
+                </button>
+                <button class="feature-btn" data-action="pdam">
+                  <div class="feature-icon">💧</div>
+                  <span>PDAM</span>
+                </button>
+                <button class="feature-btn" data-action="tv">
+                  <div class="feature-icon">📺</div>
+                  <span>TV Kabel</span>
+                </button>
+                <button class="feature-btn" data-action="donation">
+                  <div class="feature-icon">❤️</div>
+                  <span>Donasi</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+    <script src="../assets/js/theme-manager.js"></script>
+    <script src="../assets/js/qr-manager.js"></script>
+    <script src="../assets/js/dashboard-manager.js"></script>
+    <script src="../assets/js/mobile-app.js"></script>
+  
+  <!-- Theme Toggle Integration -->
+  <script>
+    // Initialize theme manager
+    document.addEventListener('DOMContentLoaded', function() {
+      // Connect theme toggle in profile menu only (header toggle handled by ThemeManager)
+      const themeToggleMenu = document.getElementById('theme-toggle-menu');
+      const themeCheckbox = document.getElementById('theme-checkbox');
+      
+      if (themeToggleMenu && themeCheckbox) {
+        themeCheckbox.addEventListener('change', function() {
+          window.themeManager.toggleTheme();
+        });
+        
+        // Update checkbox state based on current theme
+        const updateThemeUI = () => {
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          themeCheckbox.checked = isDark;
+          const icon = themeToggleMenu.querySelector('.menu-icon');
+          if (icon) {
+            icon.textContent = isDark ? '☀️' : '🌙';
+          }
+        };
+        
+        // Listen for theme changes
+        document.addEventListener('themeChanged', updateThemeUI);
+        updateThemeUI();
+      }
+    });
+  </script>
+</body>
+</html>
